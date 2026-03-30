@@ -1,7 +1,0 @@
-CREATE TABLE transactions (
-  id INTEGER PRIMARY KEY,
-  category VARCHAR(120) NOT NULL,
-  amount DECIMAL(12, 2) NOT NULL,
-  status VARCHAR(40) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);

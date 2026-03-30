@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoSubconta {
+  livre
+  restrita
+  investimento
+}
+
+enum TipoCategoria {
+  entrada
+  saida
+}
+
+enum TipoLancamento {
+  entrada
+  saida
+}
+
+model Carteira {
+  id        Int        @id @default(autoincrement())
+  nome      String
+  tipo      String
+  ativa     Boolean
+  subcontas Subconta[]
+
+  @@map("carteiras")
+}
+
+model Subconta {
+  id                           Int                  @id @default(autoincrement())
+  nome                         String
+  tipo                         TipoSubconta
+  carteira_id                  Int
+  ativa                        Boolean
+  carteira                     Carteira             @relation(fields: [carteira_id], references: [id])
+  lancamentos                  Lancamento[]
+  transferencias_origem        Transferencia[]      @relation("transferencia_origem")
+  transferencias_destino       Transferencia[]      @relation("transferencia_destino")
+  categorias_subcontas         CategoriaSubconta[]
+
+  @@unique([carteira_id, nome])
+  @@index([carteira_id])
+  @@map("subcontas")
+}
+
+model Categoria {
+  id                   Int                 @id @default(autoincrement())
+  nome                 String
+  tipo                 TipoCategoria
+  grupo                String
+  ativa                Boolean
+  lancamentos          Lancamento[]
+  categorias_subcontas CategoriaSubconta[]
+
+  @@unique([tipo, nome])
+  @@map("categorias")
+}
+
+model Lancamento {
+  id           Int            @id @default(autoincrement())
+  data         DateTime       @db.Date
+  valor        Decimal        @db.Decimal(14, 2)
+  tipo         TipoLancamento
+  categoria_id Int
+  subconta_id  Int
+  descricao    String?
+  categoria    Categoria      @relation(fields: [categoria_id], references: [id])
+  subconta     Subconta       @relation(fields: [subconta_id], references: [id])
+
+  @@index([categoria_id])
+  @@index([subconta_id])
+  @@map("lancamentos")
+}
+
+model Transferencia {
+  id                  Int       @id @default(autoincrement())
+  data                DateTime  @db.Date
+  valor               Decimal   @db.Decimal(14, 2)
+  subconta_origem_id  Int
+  subconta_destino_id Int
+  descricao           String?
+  subconta_origem     Subconta  @relation("transferencia_origem", fields: [subconta_origem_id], references: [id])
+  subconta_destino    Subconta  @relation("transferencia_destino", fields: [subconta_destino_id], references: [id])
+
+  @@index([subconta_origem_id])
+  @@index([subconta_destino_id])
+  @@map("transferencias")
+}
+
+model CategoriaSubconta {
+  id           Int       @id @default(autoincrement())
+  categoria_id Int
+  subconta_id  Int
+  categoria    Categoria @relation(fields: [categoria_id], references: [id])
+  subconta     Subconta  @relation(fields: [subconta_id], references: [id])
+
+  @@unique([categoria_id, subconta_id])
+  @@index([categoria_id])
+  @@index([subconta_id])
+  @@map("categorias_subcontas")
+}
