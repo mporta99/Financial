@@ -1,15 +1,20 @@
 const { router } = require("./routes");
+const { sendJson } = require("./utils/send-json");
 
-function app(req, res) {
+async function app(req, res) {
   res.setHeader("Content-Type", "application/json");
 
   if (req.url === "/api/health") {
-    res.writeHead(200);
-    res.end(JSON.stringify({ status: "ok" }));
+    sendJson(res, 200, { status: "ok" });
     return;
   }
 
-  router(req, res);
+  try {
+    await router(req, res);
+  } catch (error) {
+    console.error(error);
+    sendJson(res, 500, { message: "Internal server error" });
+  }
 }
 
 module.exports = { app };
