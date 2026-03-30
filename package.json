@@ -1,0 +1,12 @@
+{
+  "name": "financial-app",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Financial app monorepo with React frontend and Node.js backend.",
+  "scripts": {
+    "client:dev": "npm --prefix client run dev",
+    "client:build": "npm --prefix client run build",
+    "server:dev": "npm --prefix server run dev",
+    "server:start": "npm --prefix server run start"
+  }
+}
