@@ -1,0 +1,38 @@
+.table-card {
+  overflow: auto;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(25, 51, 42, 0.08);
+  box-shadow: 0 18px 56px rgba(25, 51, 42, 0.08);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 16px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(25, 51, 42, 0.08);
+  vertical-align: top;
+}
+
+.data-table th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #567368;
+}
+
+.table-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.empty-cell {
+  color: #567368;
+  text-align: center;
+}

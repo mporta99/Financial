@@ -8,33 +8,43 @@ const { sendJson } = require("../utils/send-json");
 
 async function router(req, res) {
   const url = new URL(req.url, "http://localhost");
+  const matchRoute = (pattern) => {
+    const match = url.pathname.match(pattern);
 
-  if (url.pathname === "/api/carteiras" && req.method === "GET") {
+    if (!match) {
+      return null;
+    }
+
+    req.params = match.groups || {};
+    return req.params;
+  };
+
+  if (matchRoute(/^\/api\/carteiras(?:\/(?<id>\d+))?$/)) {
     await handleCarteirasRoutes(req, res);
     return;
   }
 
-  if (url.pathname === "/api/subcontas" && req.method === "GET") {
+  if (matchRoute(/^\/api\/subcontas(?:\/(?<id>\d+))?$/)) {
     await handleSubcontasRoutes(req, res);
     return;
   }
 
-  if (url.pathname === "/api/categorias" && req.method === "GET") {
+  if (matchRoute(/^\/api\/categorias(?:\/(?<id>\d+))?$/)) {
     await handleCategoriasRoutes(req, res);
     return;
   }
 
-  if (url.pathname === "/api/lancamentos" && req.method === "GET") {
+  if (matchRoute(/^\/api\/lancamentos(?:\/(?<id>\d+))?$/)) {
     await handleLancamentosRoutes(req, res);
     return;
   }
 
-  if (url.pathname === "/api/transferencias" && req.method === "GET") {
+  if (matchRoute(/^\/api\/transferencias(?:\/(?<id>\d+))?$/)) {
     await handleTransferenciasRoutes(req, res);
     return;
   }
 
-  if (url.pathname === "/api/categorias-subcontas" && req.method === "GET") {
+  if (url.pathname === "/api/categorias-subcontas") {
     await handleCategoriasSubcontasRoutes(req, res);
     return;
   }

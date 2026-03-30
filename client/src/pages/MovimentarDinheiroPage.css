@@ -1,0 +1,17 @@
+.movement-page {
+  display: grid;
+  gap: 22px;
+}
+
+.movement-feedback {
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(25, 51, 42, 0.08);
+}
+
+.movement-feedback-error {
+  color: #8b2b2b;
+  border-color: rgba(164, 50, 50, 0.2);
+  background: rgba(255, 245, 245, 0.92);
+}

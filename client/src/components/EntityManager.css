@@ -1,0 +1,33 @@
+.entity-page-grid {
+  display: grid;
+  gap: 22px;
+}
+
+.entity-content-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) 1fr;
+  gap: 20px;
+}
+
+.entity-table-section {
+  min-width: 0;
+}
+
+.feedback-banner {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(25, 51, 42, 0.08);
+}
+
+.feedback-error {
+  border-color: rgba(164, 50, 50, 0.2);
+  color: #8b2b2b;
+  background: rgba(255, 245, 245, 0.92);
+}
+
+@media (max-width: 1100px) {
+  .entity-content-grid {
+    grid-template-columns: 1fr;
+  }
+}

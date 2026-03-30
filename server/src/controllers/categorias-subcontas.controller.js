@@ -1,4 +1,5 @@
 const { prisma } = require("../lib/prisma");
+const { requireInteger } = require("../utils/validators");
 
 async function listCategoriasSubcontas() {
   const items = await prisma.categoriaSubconta.findMany({
@@ -18,4 +19,23 @@ async function listCategoriasSubcontas() {
   return { items };
 }
 
-module.exports = { listCategoriasSubcontas };
+async function createCategoriaSubconta(payload) {
+  const item = await prisma.categoriaSubconta.create({
+    data: {
+      categoria_id: requireInteger(payload.categoria_id, "categoria_id"),
+      subconta_id: requireInteger(payload.subconta_id, "subconta_id")
+    },
+    include: {
+      categoria: true,
+      subconta: {
+        include: {
+          carteira: true
+        }
+      }
+    }
+  });
+
+  return { item };
+}
+
+module.exports = { createCategoriaSubconta, listCategoriasSubcontas };
