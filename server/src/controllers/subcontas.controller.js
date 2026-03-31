@@ -1,4 +1,5 @@
 const { prisma } = require("../lib/prisma");
+const { HttpError } = require("../utils/http-error");
 const {
   TIPOS_SUBCONTA,
   requireBoolean,
@@ -58,9 +59,41 @@ async function updateSubconta(id, payload) {
 }
 
 async function deleteSubconta(id) {
+  const subcontaId = requireIdParam(id);
+  const [lancamentosCount, transferenciasOrigemCount, transferenciasDestinoCount, categoriasSubcontasCount] =
+    await Promise.all([
+      prisma.lancamento.count({
+        where: {
+          subconta_id: subcontaId
+        }
+      }),
+      prisma.transferencia.count({
+        where: {
+          subconta_origem_id: subcontaId
+        }
+      }),
+      prisma.transferencia.count({
+        where: {
+          subconta_destino_id: subcontaId
+        }
+      }),
+      prisma.categoriaSubconta.count({
+        where: {
+          subconta_id: subcontaId
+        }
+      })
+    ]);
+
+  if (lancamentosCount > 0 || transferenciasOrigemCount > 0 || transferenciasDestinoCount > 0 || categoriasSubcontasCount > 0) {
+    throw new HttpError(
+      409,
+      "Nao e possivel excluir esta subconta porque existem lancamentos, transferencias ou categorias vinculadas a ela."
+    );
+  }
+
   await prisma.subconta.delete({
     where: {
-      id: requireIdParam(id)
+      id: subcontaId
     }
   });
 

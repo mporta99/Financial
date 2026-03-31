@@ -33,7 +33,12 @@ async function app(req, res) {
     }
 
     if (error && error.code === "P2003") {
-      sendJson(res, 400, { message: "Invalid related record reference" });
+      sendJson(res, 409, { message: "Nao e possivel concluir a operacao porque existem registros vinculados." });
+      return;
+    }
+
+    if (error && error.code === "P2025") {
+      sendJson(res, 404, { message: "Registro nao encontrado." });
       return;
     }
 

@@ -1,6 +1,6 @@
 import { DndContext, PointerSensor, useDraggable, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { formatCurrency, formatDate } from "../services/formatters";
 import "./MovementBoard.css";
 
@@ -20,13 +20,13 @@ function LancamentoCard({ card, subcontaId }) {
   return (
     <article ref={setNodeRef} style={style} className="lancamento-card" {...listeners} {...attributes}>
       <div className="lancamento-card-top">
-        <strong>{card.descricao || "Lançamento sem descrição"}</strong>
-        <span>{card.tipo}</span>
-      </div>
-      <p>{card.categoria?.nome ?? "Sem categoria"}</p>
-      <div className="lancamento-card-bottom">
-        <span>{formatDate(card.data)}</span>
+        <strong>{card.descricao || "Lancamento sem descricao"}</strong>
         <strong>{formatCurrency(card.valor)}</strong>
+      </div>
+      <div className="lancamento-card-meta">
+        <span>{card.categoria?.nome ?? "Sem categoria"}</span>
+        <span>{card.tipo}</span>
+        <span>{formatDate(card.data)}</span>
       </div>
     </article>
   );
@@ -52,7 +52,7 @@ function SubcontaColumn({ subconta, cards, saldo }) {
 
       <div className="subconta-card-list">
         {cards.length === 0 ? (
-          <div className="empty-drop-state">Arraste lançamentos para esta subconta.</div>
+          <div className="empty-drop-state">Arraste lancamentos para esta subconta.</div>
         ) : (
           cards.map((card) => <LancamentoCard key={card.id} card={card} subcontaId={subconta.id} />)
         )}
@@ -73,8 +73,22 @@ function randomizeAssignments(lancamentos, subcontas) {
   }, {});
 }
 
-export default function MovementBoard({ carteiras, subcontas, lancamentos, transferencias }) {
-  const [cardAssignments, setCardAssignments] = useState(() => randomizeAssignments(lancamentos, subcontas));
+function countMovedCards(lancamentos, cardAssignments) {
+  return lancamentos.reduce((total, lancamento) => {
+    return total + (Number(cardAssignments[lancamento.id]) !== Number(lancamento.subconta_id) ? 1 : 0);
+  }, 0);
+}
+
+export default function MovementBoard({
+  carteiras,
+  subcontas,
+  lancamentos,
+  transferencias,
+  cardAssignments,
+  onAssignmentsChange,
+  draftSavedAt,
+  hasUnsavedChanges
+}) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   const saldos = useMemo(() => {
@@ -82,7 +96,8 @@ export default function MovementBoard({ carteiras, subcontas, lancamentos, trans
 
     lancamentos.forEach((lancamento) => {
       const multiplier = lancamento.tipo === "entrada" ? 1 : -1;
-      saldoMap[lancamento.subconta_id] = (saldoMap[lancamento.subconta_id] ?? 0) + Number(lancamento.valor) * multiplier;
+      const assignedSubcontaId = Number(cardAssignments[lancamento.id] ?? lancamento.subconta_id);
+      saldoMap[assignedSubcontaId] = (saldoMap[assignedSubcontaId] ?? 0) + Number(lancamento.valor) * multiplier;
     });
 
     transferencias.forEach((transferencia) => {
@@ -93,7 +108,7 @@ export default function MovementBoard({ carteiras, subcontas, lancamentos, trans
     });
 
     return saldoMap;
-  }, [lancamentos, subcontas, transferencias]);
+  }, [cardAssignments, lancamentos, subcontas, transferencias]);
 
   const cardsBySubconta = useMemo(() => {
     const initialMap = subcontas.reduce((accumulator, subconta) => {
@@ -102,7 +117,7 @@ export default function MovementBoard({ carteiras, subcontas, lancamentos, trans
     }, {});
 
     lancamentos.forEach((lancamento) => {
-      const assignedSubcontaId = cardAssignments[lancamento.id];
+      const assignedSubcontaId = Number(cardAssignments[lancamento.id] ?? lancamento.subconta_id);
 
       if (initialMap[assignedSubcontaId]) {
         initialMap[assignedSubcontaId].push(lancamento);
@@ -112,6 +127,11 @@ export default function MovementBoard({ carteiras, subcontas, lancamentos, trans
     return initialMap;
   }, [cardAssignments, lancamentos, subcontas]);
 
+  const movedCardsCount = useMemo(
+    () => countMovedCards(lancamentos, cardAssignments),
+    [cardAssignments, lancamentos]
+  );
+
   function handleDragEnd(event) {
     const { active, over } = event;
 
@@ -119,16 +139,23 @@ export default function MovementBoard({ carteiras, subcontas, lancamentos, trans
       return;
     }
 
-    setCardAssignments((current) => ({
-      ...current,
+    onAssignmentsChange({
+      ...cardAssignments,
       [active.id]: Number(over.id)
-    }));
+    });
   }
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="movement-note">
-        Os cards são distribuídos visualmente de forma simulada para esta fase. Os saldos exibidos abaixo usam os dados reais do backend.
+        <div>
+          Os cards sao distribuidos visualmente de forma simulada nesta fase. O saldo acompanha a posicao atual dos cards no draft, sem alterar o banco ate voce salvar.
+        </div>
+        <div className="movement-note-meta">
+          <span>{movedCardsCount} card(s) fora da subconta original</span>
+          <span>{hasUnsavedChanges ? "Ha alteracoes nao salvas" : "Draft sincronizado"}</span>
+          <span>{draftSavedAt ? `Ultimo draft salvo: ${draftSavedAt}` : "Nenhum draft salvo ainda"}</span>
+        </div>
       </div>
 
       <div className="wallet-grid">
@@ -166,3 +193,5 @@ export default function MovementBoard({ carteiras, subcontas, lancamentos, trans
     </DndContext>
   );
 }
+
+export { randomizeAssignments };

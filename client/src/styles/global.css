@@ -1,9 +1,19 @@
 :root {
   font-family: "Segoe UI", sans-serif;
-  color: #19332a;
-  background: #eef1ec;
+  color: #2a1638;
+  background: #f6effb;
   line-height: 1.5;
   font-weight: 400;
+  --bg-app: #f6effb;
+  --bg-surface: rgba(255, 255, 255, 0.88);
+  --bg-surface-soft: rgba(250, 244, 255, 0.92);
+  --bg-accent: #820ad1;
+  --bg-accent-strong: #6a00b5;
+  --bg-accent-soft: #efe0fb;
+  --text-main: #2a1638;
+  --text-muted: #735b84;
+  --border-soft: rgba(91, 39, 130, 0.12);
+  --shadow-soft: 0 18px 56px rgba(93, 36, 135, 0.1);
 }
 
 * {
@@ -47,13 +57,13 @@ a {
 }
 
 .button-primary {
-  background: #19332a;
-  color: #f7faf8;
+  background: linear-gradient(135deg, var(--bg-accent) 0%, var(--bg-accent-strong) 100%);
+  color: #fffaff;
 }
 
 .button-secondary {
-  background: #e7eeea;
-  color: #1f3a31;
+  background: var(--bg-accent-soft);
+  color: var(--bg-accent-strong);
 }
 
 .button-danger {

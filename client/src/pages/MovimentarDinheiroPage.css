@@ -1,17 +1,54 @@
 .movement-page {
   display: grid;
-  gap: 22px;
+  gap: 16px;
+}
+
+.movement-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+}
+
+.movement-page-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.movement-page-header p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .movement-feedback {
   padding: 16px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(25, 51, 42, 0.08);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
 }
 
 .movement-feedback-error {
   color: #8b2b2b;
   border-color: rgba(164, 50, 50, 0.2);
   background: rgba(255, 245, 245, 0.92);
+}
+
+.movement-feedback-success {
+  color: #5f2e86;
+  border-color: rgba(130, 10, 209, 0.18);
+  background: rgba(245, 233, 255, 0.92);
+}
+
+@media (max-width: 720px) {
+  .movement-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

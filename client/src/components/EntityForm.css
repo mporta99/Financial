@@ -1,9 +1,9 @@
 .form-card {
   padding: 24px;
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(25, 51, 42, 0.08);
-  box-shadow: 0 18px 56px rgba(25, 51, 42, 0.08);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
 }
 
 .form-card-header h3 {
@@ -12,7 +12,7 @@
 
 .form-card-header p {
   margin: 8px 0 0;
-  color: #567368;
+  color: var(--text-muted);
 }
 
 .entity-form {
@@ -34,8 +34,8 @@
 .field-wrapper select {
   padding: 13px 14px;
   border-radius: 14px;
-  border: 1px solid rgba(25, 51, 42, 0.14);
-  background: #f7faf8;
+  border: 1px solid rgba(91, 39, 130, 0.16);
+  background: #fcf8ff;
 }
 
 .checkbox-field {

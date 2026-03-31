@@ -1,4 +1,5 @@
 const { prisma } = require("../lib/prisma");
+const { HttpError } = require("../utils/http-error");
 const { requireBoolean, requireIdParam, requireString } = require("../utils/validators");
 
 async function listCarteiras() {
@@ -39,9 +40,20 @@ async function updateCarteira(id, payload) {
 }
 
 async function deleteCarteira(id) {
+  const carteiraId = requireIdParam(id);
+  const subcontasCount = await prisma.subconta.count({
+    where: {
+      carteira_id: carteiraId
+    }
+  });
+
+  if (subcontasCount > 0) {
+    throw new HttpError(409, "Nao e possivel excluir esta carteira porque existem subcontas vinculadas a ela.");
+  }
+
   await prisma.carteira.delete({
     where: {
-      id: requireIdParam(id)
+      id: carteiraId
     }
   });
 
