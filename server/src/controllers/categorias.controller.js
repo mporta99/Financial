@@ -19,7 +19,8 @@ async function createCategoria(payload) {
       nome: requireString(payload.nome, "nome"),
       tipo: requireEnum(payload.tipo, "tipo", TIPOS_CATEGORIA),
       grupo: requireString(payload.grupo, "grupo"),
-      ativa: requireBoolean(payload.ativa, "ativa")
+      ativa: requireBoolean(payload.ativa, "ativa"),
+      eh_embutida: requireBoolean(payload.eh_embutida, "eh_embutida")
     }
   });
 
@@ -35,7 +36,8 @@ async function updateCategoria(id, payload) {
       nome: requireString(payload.nome, "nome"),
       tipo: requireEnum(payload.tipo, "tipo", TIPOS_CATEGORIA),
       grupo: requireString(payload.grupo, "grupo"),
-      ativa: requireBoolean(payload.ativa, "ativa")
+      ativa: requireBoolean(payload.ativa, "ativa"),
+      eh_embutida: requireBoolean(payload.eh_embutida, "eh_embutida")
     }
   });
 
@@ -44,7 +46,7 @@ async function updateCategoria(id, payload) {
 
 async function deleteCategoria(id) {
   const categoriaId = requireIdParam(id);
-  const [lancamentosCount, categoriasSubcontasCount] = await Promise.all([
+  const [lancamentosCount, categoriasSubcontasCount, templatesLancamentoCount, itensTemplateCount] = await Promise.all([
     prisma.lancamento.count({
       where: {
         categoria_id: categoriaId
@@ -54,11 +56,21 @@ async function deleteCategoria(id) {
       where: {
         categoria_id: categoriaId
       }
+    }),
+    prisma.templateLancamento.count({
+      where: {
+        categoria_id: categoriaId
+      }
+    }),
+    prisma.itemTemplate.count({
+      where: {
+        categoria_id: categoriaId
+      }
     })
   ]);
 
-  if (lancamentosCount > 0 || categoriasSubcontasCount > 0) {
-    throw new HttpError(409, "Nao e possivel excluir esta categoria porque existem lancamentos ou subcontas vinculados a ela.");
+  if (lancamentosCount > 0 || categoriasSubcontasCount > 0 || templatesLancamentoCount > 0 || itensTemplateCount > 0) {
+    throw new HttpError(409, "Nao e possivel excluir esta categoria porque existem registros vinculados a ela.");
   }
 
   await prisma.categoria.delete({

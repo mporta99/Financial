@@ -3,11 +3,14 @@ import "./AppShell.css";
 
 const navigationItems = [
   { to: "/", label: "Home" },
+  { to: "/pessoas", label: "Pessoas" },
   { to: "/carteiras", label: "Carteiras" },
   { to: "/subcontas", label: "Subcontas" },
   { to: "/categorias", label: "Categorias" },
-  { to: "/lancamentos", label: "Lançamentos" },
-  { to: "/transferencias", label: "Transferências" },
+  { to: "/templates-lancamento", label: "Templates" },
+  { to: "/itens-template", label: "Itens Template" },
+  { to: "/lancamentos", label: "Lancamentos" },
+  { to: "/transferencias", label: "Transferencias" },
   { to: "/movimentar-dinheiro", label: "Movimentar Dinheiro" }
 ];
 
@@ -20,7 +23,7 @@ export default function AppShell() {
         <div className="brand-block">
           <span className="brand-kicker">Financial App</span>
           <h1>Controle pessoal com estrutura clara.</h1>
-          <p>Home, CRUDs e movimentação visual prontos para crescer junto com as regras do domínio.</p>
+          <p>Home, CRUDs e movimentacao visual prontos para crescer junto com as regras do dominio.</p>
         </div>
 
         <nav className="main-nav">
@@ -29,9 +32,7 @@ export default function AppShell() {
               key={item.to}
               to={item.to}
               end={item.to === "/"}
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "nav-link-active" : ""}`
-              }
+              className={({ isActive }) => `nav-link ${isActive ? "nav-link-active" : ""}`}
             >
               {item.label}
             </NavLink>

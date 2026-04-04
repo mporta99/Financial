@@ -4,6 +4,8 @@ import { formatCurrency, formatDate } from "../services/formatters";
 
 const fields = [
   { name: "data", label: "Data", type: "date", required: true },
+  { name: "mes", label: "Mes", type: "number", required: true, placeholder: "3" },
+  { name: "ano", label: "Ano", type: "number", required: true, placeholder: "2026" },
   { name: "valor", label: "Valor", type: "number", step: "0.01", required: true, placeholder: "0.00" },
   {
     name: "subconta_origem_id",
@@ -19,11 +21,12 @@ const fields = [
     required: true,
     options: (lookups) => lookups.subcontas ?? []
   },
-  { name: "descricao", label: "Descrição", type: "text", placeholder: "Descrição opcional" }
+  { name: "descricao", label: "Descricao", type: "text", placeholder: "Descricao opcional" }
 ];
 
 const columns = [
   { key: "data", label: "Data", render: (row) => formatDate(row.data) },
+  { key: "competencia", label: "Mes/Ano", render: (row) => `${row.mes}/${row.ano}` },
   { key: "valor", label: "Valor", render: (row) => formatCurrency(row.valor) },
   {
     key: "origem",
@@ -35,14 +38,14 @@ const columns = [
     label: "Destino",
     render: (row) => `${row.subconta_destino?.carteira?.nome ?? "-"} / ${row.subconta_destino?.nome ?? "-"}`
   },
-  { key: "descricao", label: "Descrição", render: (row) => row.descricao || "-" }
+  { key: "descricao", label: "Descricao", render: (row) => row.descricao || "-" }
 ];
 
 export default function TransferenciasPage() {
   return (
     <EntityManager
-      title="Transferências"
-      description="Movimentações entre subcontas sem tratar como entrada ou saída."
+      title="Transferencias"
+      description="Movimentacoes entre subcontas sem tratar como entrada ou saida."
       endpoint="transferencias"
       fields={fields}
       columns={columns}
@@ -54,6 +57,8 @@ export default function TransferenciasPage() {
       }}
       toFormValues={(item) => ({
         data: item.data?.slice(0, 10) ?? "",
+        mes: String(item.mes ?? ""),
+        ano: String(item.ano ?? ""),
         valor: String(item.valor),
         subconta_origem_id: String(item.subconta_origem_id),
         subconta_destino_id: String(item.subconta_destino_id),
@@ -61,6 +66,8 @@ export default function TransferenciasPage() {
       })}
       buildPayload={(values) => ({
         data: values.data,
+        mes: Number(values.mes),
+        ano: Number(values.ano),
         valor: Number(values.valor),
         subconta_origem_id: Number(values.subconta_origem_id),
         subconta_destino_id: Number(values.subconta_destino_id),

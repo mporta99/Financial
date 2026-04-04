@@ -7,6 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum FrequenciaTemplate {
+  mensal
+}
+
+enum TipoGeracaoTemplate {
+  fixo
+  variavel_com_data
+  acumulador
+  embutido
+}
+
+model Pessoa {
+  id          Int          @id @default(autoincrement())
+  nome        String       @unique
+  ativa       Boolean
+  lancamentos Lancamento[]
+
+  @@map("pessoas")
+}
+
 model Carteira {
   id        Int        @id @default(autoincrement())
   nome      String
@@ -35,37 +55,52 @@ model Subconta {
 }
 
 model Categoria {
-  id                   Int                 @id @default(autoincrement())
+  id                   Int                  @id @default(autoincrement())
   nome                 String
   tipo                 String
   grupo                String
   ativa                Boolean
+  eh_embutida          Boolean
   lancamentos          Lancamento[]
   categorias_subcontas CategoriaSubconta[]
+  templates_lancamento TemplateLancamento[]
+  itens_template       ItemTemplate[]
 
   @@unique([tipo, nome])
   @@map("categorias")
 }
 
 model Lancamento {
-  id           Int            @id @default(autoincrement())
-  data         DateTime
-  valor        Decimal
-  tipo         String
-  categoria_id Int
-  subconta_id  Int
-  descricao    String?
-  categoria    Categoria      @relation(fields: [categoria_id], references: [id])
-  subconta     Subconta       @relation(fields: [subconta_id], references: [id])
+  id                    Int                 @id @default(autoincrement())
+  data                  DateTime
+  mes                   Int
+  ano                   Int
+  valor                 Decimal
+  tipo                  String
+  pessoa_id             Int
+  eh_casa               Boolean
+  categoria_id          Int
+  subconta_id           Int
+  template_lancamento_id Int?
+  descricao             String?
+  pessoa                Pessoa              @relation(fields: [pessoa_id], references: [id])
+  categoria             Categoria           @relation(fields: [categoria_id], references: [id])
+  subconta              Subconta            @relation(fields: [subconta_id], references: [id])
+  template_lancamento   TemplateLancamento? @relation(fields: [template_lancamento_id], references: [id])
 
+  @@index([pessoa_id])
   @@index([categoria_id])
   @@index([subconta_id])
+  @@index([template_lancamento_id])
+  @@index([ano, mes])
   @@map("lancamentos")
 }
 
 model Transferencia {
   id                  Int       @id @default(autoincrement())
   data                DateTime
+  mes                 Int
+  ano                 Int
   valor               Decimal
   subconta_origem_id  Int
   subconta_destino_id Int
@@ -75,6 +110,7 @@ model Transferencia {
 
   @@index([subconta_origem_id])
   @@index([subconta_destino_id])
+  @@index([ano, mes])
   @@map("transferencias")
 }
 
@@ -89,4 +125,38 @@ model CategoriaSubconta {
   @@index([categoria_id])
   @@index([subconta_id])
   @@map("categorias_subcontas")
+}
+
+model TemplateLancamento {
+  id              Int                  @id @default(autoincrement())
+  nome            String
+  categoria_id    Int
+  ativo           Boolean
+  frequencia      FrequenciaTemplate
+  tipo_geracao    TipoGeracaoTemplate
+  dia_fixo        Int?
+  tem_valor_fixo  Boolean
+  valor_padrao    Decimal?
+  gera_lancamento Boolean
+  categoria       Categoria             @relation(fields: [categoria_id], references: [id])
+  lancamentos     Lancamento[]
+  itens_template  ItemTemplate[]
+
+  @@index([categoria_id])
+  @@map("templates_lancamento")
+}
+
+model ItemTemplate {
+  id              Int                @id @default(autoincrement())
+  template_pai_id Int
+  categoria_id    Int
+  tem_valor_fixo  Boolean
+  valor_padrao    Decimal?
+  dia_fixo        Int?
+  template_pai    TemplateLancamento @relation(fields: [template_pai_id], references: [id])
+  categoria       Categoria          @relation(fields: [categoria_id], references: [id])
+
+  @@index([template_pai_id])
+  @@index([categoria_id])
+  @@map("itens_template")
 }

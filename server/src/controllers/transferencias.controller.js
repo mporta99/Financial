@@ -28,6 +28,8 @@ async function createTransferencia(payload) {
   const item = await prisma.transferencia.create({
     data: {
       data: requireDateString(payload.data, "data"),
+      mes: requireInteger(payload.mes, "mes"),
+      ano: requireInteger(payload.ano, "ano"),
       valor: requireNumber(payload.valor, "valor"),
       subconta_origem_id: requireInteger(payload.subconta_origem_id, "subconta_origem_id"),
       subconta_destino_id: requireInteger(payload.subconta_destino_id, "subconta_destino_id"),
@@ -57,6 +59,8 @@ async function updateTransferencia(id, payload) {
     },
     data: {
       data: requireDateString(payload.data, "data"),
+      mes: requireInteger(payload.mes, "mes"),
+      ano: requireInteger(payload.ano, "ano"),
       valor: requireNumber(payload.valor, "valor"),
       subconta_origem_id: requireInteger(payload.subconta_origem_id, "subconta_origem_id"),
       subconta_destino_id: requireInteger(payload.subconta_destino_id, "subconta_destino_id"),

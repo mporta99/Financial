@@ -3,6 +3,8 @@ const { HttpError } = require("./http-error");
 const TIPOS_SUBCONTA = ["livre", "restrita", "investimento"];
 const TIPOS_CATEGORIA = ["entrada", "saida"];
 const TIPOS_LANCAMENTO = ["entrada", "saida"];
+const FREQUENCIAS_TEMPLATE = ["mensal"];
+const TIPOS_GERACAO_TEMPLATE = ["fixo", "variavel_com_data", "acumulador", "embutido"];
 
 function requireString(value, fieldName) {
   if (typeof value !== "string" || value.trim() === "") {
@@ -65,7 +67,9 @@ function requireEnum(value, fieldName, allowedValues) {
 }
 
 module.exports = {
+  FREQUENCIAS_TEMPLATE,
   TIPOS_CATEGORIA,
+  TIPOS_GERACAO_TEMPLATE,
   TIPOS_LANCAMENTO,
   TIPOS_SUBCONTA,
   requireBoolean,

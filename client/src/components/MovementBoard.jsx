@@ -25,6 +25,8 @@ function LancamentoCard({ card, subcontaId }) {
       </div>
       <div className="lancamento-card-meta">
         <span>{card.categoria?.nome ?? "Sem categoria"}</span>
+        <span>{card.pessoa?.nome ?? "Sem pessoa"}</span>
+        <span>{card.eh_casa ? "Casa" : "Pessoal"}</span>
         <span>{card.tipo}</span>
         <span>{formatDate(card.data)}</span>
       </div>
