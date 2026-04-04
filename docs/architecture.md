@@ -15,4 +15,5 @@
 ## Database
 
 - SQL schema and seed files in `database/`
-- Ready to adapt to PostgreSQL, MySQL, or SQLite
+- Prisma configured with SQLite for local development
+- No Docker dependency for the database layer

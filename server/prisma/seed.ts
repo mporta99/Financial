@@ -1,4 +1,4 @@
-import { PrismaClient, TipoCategoria, TipoLancamento, TipoSubconta } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -37,7 +37,7 @@ async function main() {
   const contaSalario = await prisma.subconta.create({
     data: {
       nome: "Conta Salario",
-      tipo: TipoSubconta.livre,
+      tipo: "livre",
       carteira_id: nubank.id,
       ativa: true
     }
@@ -46,7 +46,7 @@ async function main() {
   const caixinha1 = await prisma.subconta.create({
     data: {
       nome: "Caixinha 1",
-      tipo: TipoSubconta.investimento,
+      tipo: "investimento",
       carteira_id: nubank.id,
       ativa: true
     }
@@ -55,7 +55,7 @@ async function main() {
   const alimentacao = await prisma.subconta.create({
     data: {
       nome: "Alimentacao",
-      tipo: TipoSubconta.restrita,
+      tipo: "restrita",
       carteira_id: pluxee.id,
       ativa: true
     }
@@ -64,7 +64,7 @@ async function main() {
   const refeicao = await prisma.subconta.create({
     data: {
       nome: "Refeicao",
-      tipo: TipoSubconta.restrita,
+      tipo: "restrita",
       carteira_id: pluxee.id,
       ativa: true
     }
@@ -73,7 +73,7 @@ async function main() {
   const investimentos = await prisma.subconta.create({
     data: {
       nome: "Investimentos",
-      tipo: TipoSubconta.investimento,
+      tipo: "investimento",
       carteira_id: xp.id,
       ativa: true
     }
@@ -82,7 +82,7 @@ async function main() {
   const salario = await prisma.categoria.create({
     data: {
       nome: "Salario",
-      tipo: TipoCategoria.entrada,
+      tipo: "entrada",
       grupo: "ganho",
       ativa: true
     }
@@ -91,7 +91,7 @@ async function main() {
   const mercado = await prisma.categoria.create({
     data: {
       nome: "Mercado",
-      tipo: TipoCategoria.saida,
+      tipo: "saida",
       grupo: "essencial",
       ativa: true
     }
@@ -100,7 +100,7 @@ async function main() {
   const ifood = await prisma.categoria.create({
     data: {
       nome: "Ifood",
-      tipo: TipoCategoria.saida,
+      tipo: "saida",
       grupo: "conforto",
       ativa: true
     }
@@ -109,7 +109,7 @@ async function main() {
   const luz = await prisma.categoria.create({
     data: {
       nome: "Luz",
-      tipo: TipoCategoria.saida,
+      tipo: "saida",
       grupo: "fixo",
       ativa: true
     }
@@ -118,7 +118,7 @@ async function main() {
   const investimento = await prisma.categoria.create({
     data: {
       nome: "Investimento",
-      tipo: TipoCategoria.saida,
+      tipo: "saida",
       grupo: "investimento",
       ativa: true
     }
@@ -138,7 +138,7 @@ async function main() {
       {
         data: new Date("2026-03-05"),
         valor: 8500,
-        tipo: TipoLancamento.entrada,
+        tipo: "entrada",
         categoria_id: salario.id,
         subconta_id: contaSalario.id,
         descricao: "Salario mensal"
@@ -146,7 +146,7 @@ async function main() {
       {
         data: new Date("2026-03-08"),
         valor: 420.5,
-        tipo: TipoLancamento.saida,
+        tipo: "saida",
         categoria_id: mercado.id,
         subconta_id: alimentacao.id,
         descricao: "Compras do mes no mercado"
@@ -154,7 +154,7 @@ async function main() {
       {
         data: new Date("2026-03-11"),
         valor: 68.9,
-        tipo: TipoLancamento.saida,
+        tipo: "saida",
         categoria_id: ifood.id,
         subconta_id: refeicao.id,
         descricao: "Pedido de jantar"
@@ -162,7 +162,7 @@ async function main() {
       {
         data: new Date("2026-03-15"),
         valor: 210.33,
-        tipo: TipoLancamento.saida,
+        tipo: "saida",
         categoria_id: luz.id,
         subconta_id: contaSalario.id,
         descricao: "Conta de luz"
@@ -170,7 +170,7 @@ async function main() {
       {
         data: new Date("2026-03-20"),
         valor: 1000,
-        tipo: TipoLancamento.saida,
+        tipo: "saida",
         categoria_id: investimento.id,
         subconta_id: caixinha1.id,
         descricao: "Aporte planejado"

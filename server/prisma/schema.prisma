@@ -3,24 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
-}
-
-enum TipoSubconta {
-  livre
-  restrita
-  investimento
-}
-
-enum TipoCategoria {
-  entrada
-  saida
-}
-
-enum TipoLancamento {
-  entrada
-  saida
 }
 
 model Carteira {
@@ -36,7 +20,7 @@ model Carteira {
 model Subconta {
   id                           Int                  @id @default(autoincrement())
   nome                         String
-  tipo                         TipoSubconta
+  tipo                         String
   carteira_id                  Int
   ativa                        Boolean
   carteira                     Carteira             @relation(fields: [carteira_id], references: [id])
@@ -53,7 +37,7 @@ model Subconta {
 model Categoria {
   id                   Int                 @id @default(autoincrement())
   nome                 String
-  tipo                 TipoCategoria
+  tipo                 String
   grupo                String
   ativa                Boolean
   lancamentos          Lancamento[]
@@ -65,9 +49,9 @@ model Categoria {
 
 model Lancamento {
   id           Int            @id @default(autoincrement())
-  data         DateTime       @db.Date
-  valor        Decimal        @db.Decimal(14, 2)
-  tipo         TipoLancamento
+  data         DateTime
+  valor        Decimal
+  tipo         String
   categoria_id Int
   subconta_id  Int
   descricao    String?
@@ -81,8 +65,8 @@ model Lancamento {
 
 model Transferencia {
   id                  Int       @id @default(autoincrement())
-  data                DateTime  @db.Date
-  valor               Decimal   @db.Decimal(14, 2)
+  data                DateTime
+  valor               Decimal
   subconta_origem_id  Int
   subconta_destino_id Int
   descricao           String?

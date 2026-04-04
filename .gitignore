@@ -4,6 +4,8 @@ build/
 .env
 .env.local
 .env.*.local
+server/prisma/*.db
+server/prisma/*.db-journal
 coverage/
 .DS_Store
 Thumbs.db
