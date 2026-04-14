@@ -1,9 +1,16 @@
 const { prisma } = require("../lib/prisma");
 const { HttpError } = require("../utils/http-error");
-const { TIPOS_CATEGORIA, requireBoolean, requireEnum, requireIdParam, requireString } = require("../utils/validators");
+const { GRUPOS_CATEGORIA, TIPOS_CATEGORIA, requireBoolean, requireEnum, requireIdParam, requireInteger, requireString } = require("../utils/validators");
 
 async function listCategorias() {
   const items = await prisma.categoria.findMany({
+    include: {
+      subconta_padrao: {
+        include: {
+          carteira: true
+        }
+      }
+    },
     orderBy: [
       { tipo: "asc" },
       { id: "asc" }
@@ -18,9 +25,18 @@ async function createCategoria(payload) {
     data: {
       nome: requireString(payload.nome, "nome"),
       tipo: requireEnum(payload.tipo, "tipo", TIPOS_CATEGORIA),
-      grupo: requireString(payload.grupo, "grupo"),
+      grupo: requireEnum(payload.grupo, "grupo", GRUPOS_CATEGORIA),
       ativa: requireBoolean(payload.ativa, "ativa"),
-      eh_embutida: requireBoolean(payload.eh_embutida, "eh_embutida")
+      casa: requireBoolean(payload.casa, "casa"),
+      embutido: requireBoolean(payload.embutido, "embutido"),
+      subconta_id: payload.subconta_id == null ? null : requireInteger(payload.subconta_id, "subconta_id")
+    },
+    include: {
+      subconta_padrao: {
+        include: {
+          carteira: true
+        }
+      }
     }
   });
 
@@ -35,9 +51,18 @@ async function updateCategoria(id, payload) {
     data: {
       nome: requireString(payload.nome, "nome"),
       tipo: requireEnum(payload.tipo, "tipo", TIPOS_CATEGORIA),
-      grupo: requireString(payload.grupo, "grupo"),
+      grupo: requireEnum(payload.grupo, "grupo", GRUPOS_CATEGORIA),
       ativa: requireBoolean(payload.ativa, "ativa"),
-      eh_embutida: requireBoolean(payload.eh_embutida, "eh_embutida")
+      casa: requireBoolean(payload.casa, "casa"),
+      embutido: requireBoolean(payload.embutido, "embutido"),
+      subconta_id: payload.subconta_id == null ? null : requireInteger(payload.subconta_id, "subconta_id")
+    },
+    include: {
+      subconta_padrao: {
+        include: {
+          carteira: true
+        }
+      }
     }
   });
 

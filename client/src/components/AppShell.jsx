@@ -11,7 +11,8 @@ const navigationItems = [
   { to: "/itens-template", label: "Itens Template" },
   { to: "/lancamentos", label: "Lancamentos" },
   { to: "/transferencias", label: "Transferencias" },
-  { to: "/movimentar-dinheiro", label: "Movimentar Dinheiro" }
+  { to: "/movimentar-dinheiro", label: "Movimentar Dinheiro" },
+  { to: "/gerar-mes", label: "Gerar Mes" }
 ];
 
 export default function AppShell() {

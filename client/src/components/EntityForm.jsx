@@ -22,12 +22,12 @@ export default function EntityForm({
     <section className="form-card">
       <div className="form-card-header">
         <h3>{title}</h3>
-        <p>Preencha os campos abaixo para salvar os dados.</p>
+        <p>Preencha e salve.</p>
       </div>
 
       <form className="entity-form" onSubmit={onSubmit}>
         {fields.map((field) => (
-          <label key={field.name} className={`field-wrapper ${field.type === "checkbox" ? "checkbox-field" : ""}`}>
+          <label key={field.name} className={`field-wrapper ${field.type === "checkbox" ? "checkbox-field field-full" : ""}`}>
             <span>{field.label}</span>
             {field.type === "select" ? (
               <select
@@ -64,7 +64,7 @@ export default function EntityForm({
           </label>
         ))}
 
-        <div className="form-actions">
+        <div className="form-actions field-full">
           <button type="submit" className="button-primary" disabled={loading}>
             {loading ? "Salvando..." : submitLabel}
           </button>

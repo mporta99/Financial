@@ -1,0 +1,127 @@
+.gerar-mes-page {
+  display: grid;
+  gap: 16px;
+}
+
+.gerar-mes-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.gerar-mes-form,
+.gerar-mes-result {
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+}
+
+.gerar-mes-form {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.gerar-mes-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.gerar-mes-form span,
+.gerar-mes-summary span,
+.gerar-mes-result h4 {
+  color: var(--text-muted);
+}
+
+.gerar-mes-form input,
+.gerar-mes-form select,
+.gerar-mes-form button {
+  min-height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  padding: 0 12px;
+  font: inherit;
+}
+
+.gerar-mes-form button {
+  background: #6f2dbd;
+  color: white;
+  border-color: #6f2dbd;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gerar-mes-result {
+  display: grid;
+  gap: 16px;
+}
+
+.gerar-mes-result h3,
+.gerar-mes-result h4 {
+  margin: 0;
+}
+
+.gerar-mes-empty {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.gerar-mes-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.gerar-mes-summary div {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(245, 233, 255, 0.6);
+}
+
+.gerar-mes-summary strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1.1rem;
+}
+
+.gerar-mes-lists {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.gerar-mes-lists ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: grid;
+  gap: 8px;
+}
+
+.gerar-mes-lists li {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--border-soft);
+}
+
+.gerar-mes-lists li strong,
+.gerar-mes-lists li span {
+  display: block;
+}
+
+.gerar-mes-lists li span {
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 900px) {
+  .gerar-mes-grid,
+  .gerar-mes-lists,
+  .gerar-mes-summary {
+    grid-template-columns: 1fr;
+  }
+}

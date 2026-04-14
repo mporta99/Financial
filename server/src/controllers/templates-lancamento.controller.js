@@ -16,7 +16,7 @@ function optionalInteger(value, fieldName) {
     return null;
   }
 
-  return requireInteger(value, fieldName);
+  return requireInteger(Number(value), fieldName);
 }
 
 function optionalNumber(value, fieldName) {
@@ -27,10 +27,29 @@ function optionalNumber(value, fieldName) {
   return requireNumber(value, fieldName);
 }
 
+async function validatePessoaId(pessoaId) {
+  if (pessoaId == null) {
+    return null;
+  }
+
+  const pessoa = await prisma.pessoa.findUnique({
+    where: {
+      id: pessoaId
+    }
+  });
+
+  if (!pessoa) {
+    throw new HttpError(400, "Pessoa informada no template nao existe.");
+  }
+
+  return pessoaId;
+}
+
 async function listTemplatesLancamento() {
   const items = await prisma.templateLancamento.findMany({
     include: {
       categoria: true,
+      pessoa: true,
       itens_template: {
         include: {
           categoria: true
@@ -46,10 +65,12 @@ async function listTemplatesLancamento() {
 }
 
 async function createTemplateLancamento(payload) {
+  const pessoaId = await validatePessoaId(optionalInteger(payload.pessoa_id, "pessoa_id"));
   const item = await prisma.templateLancamento.create({
     data: {
       nome: requireString(payload.nome, "nome"),
       categoria_id: requireInteger(payload.categoria_id, "categoria_id"),
+      pessoa_id: pessoaId,
       ativo: requireBoolean(payload.ativo, "ativo"),
       frequencia: requireEnum(payload.frequencia, "frequencia", FREQUENCIAS_TEMPLATE),
       tipo_geracao: requireEnum(payload.tipo_geracao, "tipo_geracao", TIPOS_GERACAO_TEMPLATE),
@@ -60,6 +81,7 @@ async function createTemplateLancamento(payload) {
     },
     include: {
       categoria: true,
+      pessoa: true,
       itens_template: {
         include: {
           categoria: true
@@ -72,6 +94,7 @@ async function createTemplateLancamento(payload) {
 }
 
 async function updateTemplateLancamento(id, payload) {
+  const pessoaId = await validatePessoaId(optionalInteger(payload.pessoa_id, "pessoa_id"));
   const item = await prisma.templateLancamento.update({
     where: {
       id: requireIdParam(id)
@@ -79,6 +102,7 @@ async function updateTemplateLancamento(id, payload) {
     data: {
       nome: requireString(payload.nome, "nome"),
       categoria_id: requireInteger(payload.categoria_id, "categoria_id"),
+      pessoa_id: pessoaId,
       ativo: requireBoolean(payload.ativo, "ativo"),
       frequencia: requireEnum(payload.frequencia, "frequencia", FREQUENCIAS_TEMPLATE),
       tipo_geracao: requireEnum(payload.tipo_geracao, "tipo_geracao", TIPOS_GERACAO_TEMPLATE),
@@ -89,6 +113,7 @@ async function updateTemplateLancamento(id, payload) {
     },
     include: {
       categoria: true,
+      pessoa: true,
       itens_template: {
         include: {
           categoria: true

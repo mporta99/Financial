@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+﻿import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -100,9 +100,11 @@ async function main() {
     data: {
       nome: "Salario",
       tipo: "entrada",
-      grupo: "ganho",
+      grupo: "Outros",
       ativa: true,
-      eh_embutida: false
+      casa: false,
+      subconta_id: contaSalario.id,
+      embutido: false
     }
   });
 
@@ -110,9 +112,11 @@ async function main() {
     data: {
       nome: "Aluguel",
       tipo: "saida",
-      grupo: "fixo",
+      grupo: "Essenciais",
       ativa: true,
-      eh_embutida: false
+      casa: true,
+      subconta_id: contaSalario.id,
+      embutido: false
     }
   });
 
@@ -120,9 +124,11 @@ async function main() {
     data: {
       nome: "Fatura",
       tipo: "saida",
-      grupo: "cartao",
+      grupo: "Cartao",
       ativa: true,
-      eh_embutida: false
+      casa: true,
+      subconta_id: contaSalario.id,
+      embutido: false
     }
   });
 
@@ -130,9 +136,11 @@ async function main() {
     data: {
       nome: "Mercado",
       tipo: "saida",
-      grupo: "essencial",
+      grupo: "Essenciais",
       ativa: true,
-      eh_embutida: false
+      casa: true,
+      subconta_id: alimentacao.id,
+      embutido: false
     }
   });
 
@@ -140,9 +148,11 @@ async function main() {
     data: {
       nome: "Ifood",
       tipo: "saida",
-      grupo: "conforto",
+      grupo: "Conforto",
       ativa: true,
-      eh_embutida: false
+      casa: false,
+      subconta_id: refeicao.id,
+      embutido: false
     }
   });
 
@@ -150,9 +160,11 @@ async function main() {
     data: {
       nome: "Debitos",
       tipo: "saida",
-      grupo: "variavel",
+      grupo: "Outros",
       ativa: true,
-      eh_embutida: false
+      casa: false,
+      subconta_id: contaSalario.id,
+      embutido: false
     }
   });
 
@@ -160,9 +172,11 @@ async function main() {
     data: {
       nome: "ChatGPT",
       tipo: "saida",
-      grupo: "assinatura",
+      grupo: "Conforto",
       ativa: true,
-      eh_embutida: true
+      casa: false,
+      subconta_id: contaSalario.id,
+      embutido: true
     }
   });
 
@@ -170,9 +184,11 @@ async function main() {
     data: {
       nome: "Netflix",
       tipo: "saida",
-      grupo: "assinatura",
+      grupo: "Conforto",
       ativa: true,
-      eh_embutida: true
+      casa: false,
+      subconta_id: contaSalario.id,
+      embutido: true
     }
   });
 
@@ -180,9 +196,11 @@ async function main() {
     data: {
       nome: "Outros",
       tipo: "saida",
-      grupo: "composicao",
+      grupo: "Outros",
       ativa: true,
-      eh_embutida: true
+      casa: false,
+      subconta_id: contaSalario.id,
+      embutido: true
     }
   });
 
@@ -190,9 +208,11 @@ async function main() {
     data: {
       nome: "Luz",
       tipo: "saida",
-      grupo: "fixo",
+      grupo: "Essenciais",
       ativa: true,
-      eh_embutida: false
+      casa: true,
+      subconta_id: contaSalario.id,
+      embutido: false
     }
   });
 
@@ -200,9 +220,11 @@ async function main() {
     data: {
       nome: "Investimento",
       tipo: "saida",
-      grupo: "investimento",
+      grupo: "Investimentos",
       ativa: true,
-      eh_embutida: false
+      casa: false,
+      subconta_id: caixinha1.id,
+      embutido: false
     }
   });
 
@@ -219,6 +241,7 @@ async function main() {
     data: {
       nome: "Aluguel",
       categoria_id: aluguel.id,
+      pessoa_id: null,
       ativo: true,
       frequencia: "mensal",
       tipo_geracao: "fixo",
@@ -233,6 +256,7 @@ async function main() {
     data: {
       nome: "Fatura",
       categoria_id: fatura.id,
+      pessoa_id: marcus.id,
       ativo: true,
       frequencia: "mensal",
       tipo_geracao: "variavel_com_data",
@@ -247,6 +271,7 @@ async function main() {
     data: {
       nome: "Mercado",
       categoria_id: mercado.id,
+      pessoa_id: marcus.id,
       ativo: true,
       frequencia: "mensal",
       tipo_geracao: "acumulador",
@@ -261,6 +286,7 @@ async function main() {
     data: {
       nome: "Ifood",
       categoria_id: ifood.id,
+      pessoa_id: maju.id,
       ativo: true,
       frequencia: "mensal",
       tipo_geracao: "acumulador",
@@ -275,6 +301,7 @@ async function main() {
     data: {
       nome: "Debitos",
       categoria_id: debitos.id,
+      pessoa_id: null,
       ativo: true,
       frequencia: "mensal",
       tipo_geracao: "acumulador",
@@ -289,6 +316,7 @@ async function main() {
     data: {
       nome: "ChatGPT",
       categoria_id: chatgpt.id,
+      pessoa_id: marcus.id,
       ativo: true,
       frequencia: "mensal",
       tipo_geracao: "embutido",
@@ -303,6 +331,7 @@ async function main() {
     data: {
       nome: "Netflix",
       categoria_id: netflix.id,
+      pessoa_id: marcus.id,
       ativo: true,
       frequencia: "mensal",
       tipo_geracao: "embutido",
@@ -348,8 +377,10 @@ async function main() {
         template_lancamento_id: null,
         valor: 8500,
         tipo: "entrada",
+        status: "pago",
+        data_pagamento: new Date("2026-03-05T09:00:00.000Z"),
         pessoa_id: marcus.id,
-        eh_casa: false,
+        casa: false,
         categoria_id: salario.id,
         subconta_id: contaSalario.id,
         descricao: "Salario de Marcus"
@@ -361,8 +392,10 @@ async function main() {
         template_lancamento_id: templateAluguel.id,
         valor: 1850,
         tipo: "saida",
+        status: "pago",
+        data_pagamento: new Date("2026-03-05T12:00:00.000Z"),
         pessoa_id: marcus.id,
-        eh_casa: true,
+        casa: true,
         categoria_id: aluguel.id,
         subconta_id: contaSalario.id,
         descricao: "Aluguel gerado do template"
@@ -374,8 +407,10 @@ async function main() {
         template_lancamento_id: templateMercado.id,
         valor: 420.5,
         tipo: "saida",
+        status: "pago",
+        data_pagamento: new Date("2026-03-08T18:00:00.000Z"),
         pessoa_id: marcus.id,
-        eh_casa: true,
+        casa: true,
         categoria_id: mercado.id,
         subconta_id: alimentacao.id,
         descricao: "Mercado vindo do template"
@@ -387,8 +422,10 @@ async function main() {
         template_lancamento_id: templateFatura.id,
         valor: 359.8,
         tipo: "saida",
+        status: "nao_pago",
+        data_pagamento: null,
         pessoa_id: marcus.id,
-        eh_casa: true,
+        casa: true,
         categoria_id: fatura.id,
         subconta_id: contaSalario.id,
         descricao: "Fatura gerada do template"
@@ -400,8 +437,10 @@ async function main() {
         template_lancamento_id: templateIfood.id,
         valor: 68.9,
         tipo: "saida",
+        status: "pago",
+        data_pagamento: new Date("2026-03-08T20:00:00.000Z"),
         pessoa_id: maju.id,
-        eh_casa: false,
+        casa: false,
         categoria_id: ifood.id,
         subconta_id: refeicao.id,
         descricao: "Ifood vindo do template"
@@ -413,8 +452,10 @@ async function main() {
         template_lancamento_id: null,
         valor: 32.5,
         tipo: "saida",
+        status: "nao_pago",
+        data_pagamento: null,
         pessoa_id: maju.id,
-        eh_casa: false,
+        casa: false,
         categoria_id: ifood.id,
         subconta_id: refeicao.id,
         descricao: "Cafe manual sem template"
@@ -426,8 +467,10 @@ async function main() {
         template_lancamento_id: null,
         valor: 210.33,
         tipo: "saida",
+        status: "pago",
+        data_pagamento: new Date("2026-03-15T10:00:00.000Z"),
         pessoa_id: marcus.id,
-        eh_casa: true,
+        casa: true,
         categoria_id: luz.id,
         subconta_id: contaSalario.id,
         descricao: "Luz da casa"
@@ -439,8 +482,10 @@ async function main() {
         template_lancamento_id: null,
         valor: 1000,
         tipo: "saida",
+        status: "nao_pago",
+        data_pagamento: null,
         pessoa_id: marcus.id,
-        eh_casa: false,
+        casa: false,
         categoria_id: investimento.id,
         subconta_id: caixinha1.id,
         descricao: "Aporte planejado"
@@ -455,15 +500,19 @@ async function main() {
         mes: 3,
         ano: 2026,
         valor: 1000,
+        status: "planejada",
+        data_realizacao: null,
         subconta_origem_id: contaSalario.id,
         subconta_destino_id: caixinha1.id,
-        descricao: "Reserva mensal"
+        descricao: "Reserva planejada"
       },
       {
         data: new Date("2026-03-25"),
         mes: 3,
         ano: 2026,
         valor: 500,
+        status: "realizada",
+        data_realizacao: new Date("2026-03-25T14:00:00.000Z"),
         subconta_origem_id: contaSalario.id,
         subconta_destino_id: investimentos.id,
         descricao: "Transferencia para corretora"

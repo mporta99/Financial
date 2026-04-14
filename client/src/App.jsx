@@ -10,6 +10,7 @@ import ItensTemplatePage from "./pages/ItensTemplatePage";
 import LancamentosPage from "./pages/LancamentosPage";
 import TransferenciasPage from "./pages/TransferenciasPage";
 import MovimentarDinheiroPage from "./pages/MovimentarDinheiroPage";
+import GerarMesPage from "./pages/GerarMesPage";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="lancamentos" element={<LancamentosPage />} />
           <Route path="transferencias" element={<TransferenciasPage />} />
           <Route path="movimentar-dinheiro" element={<MovimentarDinheiroPage />} />
+          <Route path="gerar-mes" element={<GerarMesPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -18,11 +18,22 @@ enum TipoGeracaoTemplate {
   embutido
 }
 
+enum StatusLancamento {
+  nao_pago
+  pago
+}
+
+enum StatusTransferencia {
+  planejada
+  realizada
+}
+
 model Pessoa {
   id          Int          @id @default(autoincrement())
   nome        String       @unique
   ativa       Boolean
   lancamentos Lancamento[]
+  templates_lancamento TemplateLancamento[]
 
   @@map("pessoas")
 }
@@ -44,6 +55,7 @@ model Subconta {
   carteira_id                  Int
   ativa                        Boolean
   carteira                     Carteira             @relation(fields: [carteira_id], references: [id])
+  categorias_padrao            Categoria[]          @relation("categoria_subconta_padrao")
   lancamentos                  Lancamento[]
   transferencias_origem        Transferencia[]      @relation("transferencia_origem")
   transferencias_destino       Transferencia[]      @relation("transferencia_destino")
@@ -60,13 +72,17 @@ model Categoria {
   tipo                 String
   grupo                String
   ativa                Boolean
-  eh_embutida          Boolean
+  casa                 Boolean
+  embutido             Boolean
+  subconta_id          Int?
   lancamentos          Lancamento[]
+  subconta_padrao      Subconta?            @relation("categoria_subconta_padrao", fields: [subconta_id], references: [id])
   categorias_subcontas CategoriaSubconta[]
   templates_lancamento TemplateLancamento[]
   itens_template       ItemTemplate[]
 
   @@unique([tipo, nome])
+  @@index([subconta_id])
   @@map("categorias")
 }
 
@@ -77,21 +93,27 @@ model Lancamento {
   ano                   Int
   valor                 Decimal
   tipo                  String
+  status                StatusLancamento    @default(nao_pago)
+  data_pagamento        DateTime?
+  contabiliza_saldo     Boolean             @default(true)
   pessoa_id             Int
-  eh_casa               Boolean
+  casa                  Boolean
   categoria_id          Int
   subconta_id           Int
   template_lancamento_id Int?
+  item_template_id      Int?
   descricao             String?
   pessoa                Pessoa              @relation(fields: [pessoa_id], references: [id])
   categoria             Categoria           @relation(fields: [categoria_id], references: [id])
   subconta              Subconta            @relation(fields: [subconta_id], references: [id])
   template_lancamento   TemplateLancamento? @relation(fields: [template_lancamento_id], references: [id])
+  item_template         ItemTemplate?       @relation(fields: [item_template_id], references: [id])
 
   @@index([pessoa_id])
   @@index([categoria_id])
   @@index([subconta_id])
   @@index([template_lancamento_id])
+  @@index([item_template_id])
   @@index([ano, mes])
   @@map("lancamentos")
 }
@@ -102,6 +124,8 @@ model Transferencia {
   mes                 Int
   ano                 Int
   valor               Decimal
+  status              StatusTransferencia @default(planejada)
+  data_realizacao     DateTime?
   subconta_origem_id  Int
   subconta_destino_id Int
   descricao           String?
@@ -131,6 +155,7 @@ model TemplateLancamento {
   id              Int                  @id @default(autoincrement())
   nome            String
   categoria_id    Int
+  pessoa_id       Int?
   ativo           Boolean
   frequencia      FrequenciaTemplate
   tipo_geracao    TipoGeracaoTemplate
@@ -139,10 +164,12 @@ model TemplateLancamento {
   valor_padrao    Decimal?
   gera_lancamento Boolean
   categoria       Categoria             @relation(fields: [categoria_id], references: [id])
+  pessoa          Pessoa?               @relation(fields: [pessoa_id], references: [id])
   lancamentos     Lancamento[]
   itens_template  ItemTemplate[]
 
   @@index([categoria_id])
+  @@index([pessoa_id])
   @@map("templates_lancamento")
 }
 
@@ -153,6 +180,7 @@ model ItemTemplate {
   tem_valor_fixo  Boolean
   valor_padrao    Decimal?
   dia_fixo        Int?
+  lancamentos     Lancamento[]
   template_pai    TemplateLancamento @relation(fields: [template_pai_id], references: [id])
   categoria       Categoria          @relation(fields: [categoria_id], references: [id])
 

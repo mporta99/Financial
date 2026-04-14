@@ -11,6 +11,12 @@ const fields = [
     required: true,
     options: (lookups) => lookups.categorias ?? []
   },
+  {
+    name: "pessoa_id",
+    label: "Pessoa",
+    type: "select",
+    options: (lookups) => lookups.pessoas ?? []
+  },
   { name: "ativo", label: "Ativo", type: "checkbox" },
   {
     name: "frequencia",
@@ -40,6 +46,7 @@ const fields = [
 const columns = [
   { key: "nome", label: "Nome" },
   { key: "categoria", label: "Categoria", render: (row) => row.categoria?.nome ?? "-" },
+  { key: "pessoa", label: "Pessoa", render: (row) => row.pessoa?.nome ?? "Todas" },
   { key: "frequencia", label: "Frequencia" },
   { key: "tipo_geracao", label: "Tipo geracao" },
   { key: "dia_fixo", label: "Dia fixo", render: (row) => row.dia_fixo ?? "-" },
@@ -58,14 +65,16 @@ export default function TemplatesLancamentoPage() {
       fields={fields}
       columns={columns}
       loadLookups={async () => {
-        const categorias = await getResourceList("categorias");
+        const [categorias, pessoas] = await Promise.all([getResourceList("categorias"), getResourceList("pessoas")]);
         return {
-          categorias: categorias.map((item) => ({ value: String(item.id), label: `${item.nome} (${item.tipo})` }))
+          categorias: categorias.map((item) => ({ value: String(item.id), label: `${item.nome} (${item.tipo})` })),
+          pessoas: [{ value: "", label: "Todas as pessoas" }].concat(pessoas.map((item) => ({ value: String(item.id), label: item.nome })))
         };
       }}
       toFormValues={(item) => ({
         nome: item.nome,
         categoria_id: String(item.categoria_id),
+        pessoa_id: item.pessoa_id == null ? "" : String(item.pessoa_id),
         ativo: item.ativo,
         frequencia: item.frequencia,
         tipo_geracao: item.tipo_geracao,
@@ -77,6 +86,7 @@ export default function TemplatesLancamentoPage() {
       buildPayload={(values) => ({
         nome: values.nome,
         categoria_id: Number(values.categoria_id),
+        pessoa_id: values.pessoa_id === "" ? null : Number(values.pessoa_id),
         ativo: Boolean(values.ativo),
         frequencia: values.frequencia,
         tipo_geracao: values.tipo_geracao,

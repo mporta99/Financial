@@ -2,6 +2,7 @@ const { spawn } = require("child_process");
 
 const isWindows = process.platform === "win32";
 const children = [];
+const mode = process.argv[2] === "test" ? "test" : "default";
 
 function startProcess(name, command, color) {
   const child = spawn(command, {
@@ -64,5 +65,5 @@ function shutdown(exitCode) {
 process.on("SIGINT", () => shutdown(0));
 process.on("SIGTERM", () => shutdown(0));
 
-startProcess("server", "npm run server:dev", "36");
+startProcess("server", mode === "test" ? "npm run server:test:dev" : "npm run server:dev", "36");
 startProcess("client", "npm run client:dev", "35");

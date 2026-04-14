@@ -16,3 +16,392 @@
 .home-nav-grid {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
+
+.caixa-section {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), rgba(249, 243, 255, 0.94) 42%, rgba(244, 237, 255, 0.92) 100%);
+  border: 1px solid rgba(130, 10, 209, 0.12);
+  box-shadow:
+    0 18px 40px rgba(68, 30, 110, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.caixa-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.caixa-section-heading {
+  display: grid;
+  gap: 2px;
+}
+
+.caixa-section-kicker {
+  color: rgba(96, 68, 128, 0.82);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+
+.caixa-section-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.caixa-section-header h3 {
+  margin: 2px 0 0;
+  font-size: 1.6rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.caixa-section-competencia {
+  color: rgba(88, 55, 132, 0.88);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(130, 10, 209, 0.12);
+}
+
+.caixa-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(82px, 1fr));
+  gap: 6px;
+}
+
+.caixa-filters select {
+  min-height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(130, 10, 209, 0.16);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0 10px;
+  color: var(--text-strong);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(87, 47, 135, 0.06);
+}
+
+.caixa-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.95fr);
+  align-items: start;
+}
+
+.caixa-main-column,
+.caixa-side-column {
+  display: grid;
+  gap: 12px;
+}
+
+.caixa-salario-groups {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr);
+}
+
+.caixa-pluxee-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.caixa-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(130, 10, 209, 0.1);
+  box-shadow:
+    0 10px 24px rgba(86, 45, 134, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.caixa-card-salario {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 241, 241, 0.92));
+  border-color: rgba(201, 72, 72, 0.14);
+}
+
+.caixa-card-pluxee {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(243, 250, 244, 0.92));
+  border-color: rgba(61, 147, 74, 0.14);
+}
+
+.caixa-card-investimentos {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(242, 246, 255, 0.94));
+  border-color: rgba(62, 104, 194, 0.14);
+}
+
+.caixa-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.caixa-card-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.caixa-card-kicker {
+  color: rgba(91, 64, 131, 0.78);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+
+.caixa-card-name {
+  font-size: 1.12rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.caixa-card-metrics {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.caixa-card-metrics span {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.caixa-card-metrics strong {
+  color: var(--text-strong);
+  font-size: 1.24rem;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.caixa-card-metrics span + span strong {
+  color: rgba(66, 51, 108, 0.62);
+}
+
+.caixa-payables-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(130, 10, 209, 0.08);
+}
+
+.caixa-payables-label {
+  color: rgba(122, 73, 73, 0.9);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  font-weight: 700;
+}
+
+.caixa-payables-total {
+  font-size: 1.08rem;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #9c1f1f;
+}
+
+.caixa-payables-list,
+.caixa-fatura-list {
+  display: grid;
+  gap: 7px;
+}
+
+.caixa-fatura-box {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 244, 244, 0.98), rgba(255, 249, 249, 0.96));
+  border: 1px solid rgba(183, 53, 53, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.caixa-fatura-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.caixa-fatura-label {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(128, 49, 49, 0.92);
+}
+
+.caixa-fatura-total {
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #9c1f1f;
+}
+
+.caixa-line-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 6px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(130, 10, 209, 0.07);
+}
+
+.caixa-line-row-fatura {
+  border-color: rgba(183, 53, 53, 0.08);
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.caixa-line-row-fatura .caixa-line-name,
+.caixa-line-row-fatura .caixa-line-value {
+  color: rgba(36, 18, 72, 0.78);
+}
+
+.caixa-line-name {
+  font-size: 0.74rem;
+  line-height: 1.05;
+  font-weight: 600;
+  color: rgba(36, 18, 72, 0.78);
+}
+
+.caixa-line-meta {
+  color: var(--text-muted);
+  font-size: 0.6rem;
+  white-space: nowrap;
+  opacity: 0.82;
+}
+
+.caixa-line-value {
+  font-size: 0.88rem;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: #9c1f1f;
+}
+
+.caixa-empty {
+  padding: 12px 10px;
+  border-radius: 14px;
+  border: 1px dashed rgba(130, 10, 209, 0.18);
+  color: rgba(92, 70, 126, 0.82);
+  background: rgba(255, 255, 255, 0.58);
+  text-align: center;
+  font-size: 0.7rem;
+}
+
+.caixa-investment-grid {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: 1fr;
+}
+
+.caixa-investment-groups {
+  display: grid;
+  gap: 10px;
+}
+
+.caixa-investment-group-card {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(243, 247, 255, 0.8);
+  border: 1px solid rgba(62, 104, 194, 0.1);
+}
+
+.caixa-investment-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.caixa-investment-card {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(62, 104, 194, 0.08);
+}
+
+.caixa-investment-name {
+  font-size: 0.86rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.caixa-investment-values {
+  display: grid;
+  gap: 3px;
+}
+
+.caixa-investment-values span {
+  color: #133a7c;
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 760px) {
+  .caixa-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .caixa-salario-groups,
+  .caixa-pluxee-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .caixa-section-header,
+  .caixa-card-header,
+  .caixa-investment-group-header {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .caixa-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .caixa-line-row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .caixa-line-meta {
+    grid-column: 1 / 2;
+  }
+}

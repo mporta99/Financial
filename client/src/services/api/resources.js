@@ -1,7 +1,11 @@
 import { request } from "./http";
 
-async function getResourceList(resource) {
-  const data = await request(`/${resource}`);
+async function getResourceList(resource, query = {}) {
+  const searchParams = new URLSearchParams(
+    Object.entries(query).filter(([, value]) => value !== undefined && value !== null && value !== "")
+  );
+  const suffix = searchParams.size ? `?${searchParams.toString()}` : "";
+  const data = await request(`/${resource}${suffix}`);
   return data.items ?? [];
 }
 
@@ -18,4 +22,11 @@ async function deleteEntity(resource, id) {
   });
 }
 
-export { deleteEntity, getResourceList, saveEntity };
+async function patchEntity(resource, id, payload) {
+  return request(`/${resource}/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  });
+}
+
+export { deleteEntity, getResourceList, patchEntity, saveEntity };

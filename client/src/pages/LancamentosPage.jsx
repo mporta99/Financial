@@ -18,13 +18,24 @@ const fields = [
     ]
   },
   {
+    name: "status",
+    label: "Status",
+    type: "select",
+    required: true,
+    options: [
+      { value: "nao_pago", label: "Nao pago" },
+      { value: "pago", label: "Pago" }
+    ]
+  },
+  { name: "data_pagamento", label: "Data pagamento", type: "date" },
+  {
     name: "pessoa_id",
     label: "Pessoa",
     type: "select",
     required: true,
     options: (lookups) => lookups.pessoas ?? []
   },
-  { name: "eh_casa", label: "Eh da casa", type: "checkbox" },
+  { name: "casa", label: "Casa", type: "checkbox" },
   {
     name: "categoria_id",
     label: "Categoria",
@@ -39,6 +50,12 @@ const fields = [
     required: true,
     options: (lookups) => lookups.subcontas ?? []
   },
+  {
+    name: "template_lancamento_id",
+    label: "Template",
+    type: "select",
+    options: (lookups) => lookups.templates ?? []
+  },
   { name: "descricao", label: "Descricao", type: "text", placeholder: "Descricao opcional" }
 ];
 
@@ -47,10 +64,12 @@ const columns = [
   { key: "competencia", label: "Mes/Ano", render: (row) => `${row.mes}/${row.ano}` },
   { key: "descricao", label: "Descricao", render: (row) => row.descricao || "-" },
   { key: "pessoa", label: "Pessoa", render: (row) => row.pessoa?.nome ?? "-" },
-  { key: "eh_casa", label: "Casa", render: (row) => (row.eh_casa ? "Sim" : "Nao") },
+  { key: "casa", label: "Casa", render: (row) => (row.casa ? "Sim" : "Nao") },
+  { key: "status", label: "Status" },
   { key: "tipo", label: "Tipo" },
   { key: "valor", label: "Valor", render: (row) => formatCurrency(row.valor) },
   { key: "categoria", label: "Categoria", render: (row) => row.categoria?.nome ?? "-" },
+  { key: "template_lancamento", label: "Template", render: (row) => row.template_lancamento?.nome ?? "-" },
   { key: "subconta", label: "Subconta", render: (row) => row.subconta?.nome ?? "-" }
 ];
 
@@ -63,16 +82,18 @@ export default function LancamentosPage() {
       fields={fields}
       columns={columns}
       loadLookups={async () => {
-        const [pessoas, categorias, subcontas] = await Promise.all([
+        const [pessoas, categorias, subcontas, templates] = await Promise.all([
           getResourceList("pessoas"),
           getResourceList("categorias"),
-          getResourceList("subcontas")
+          getResourceList("subcontas"),
+          getResourceList("templates-lancamento")
         ]);
 
         return {
           pessoas: pessoas.map((item) => ({ value: String(item.id), label: item.nome })),
           categorias: categorias.map((item) => ({ value: String(item.id), label: `${item.nome} (${item.tipo})` })),
-          subcontas: subcontas.map((item) => ({ value: String(item.id), label: `${item.carteira?.nome} / ${item.nome}` }))
+          subcontas: subcontas.map((item) => ({ value: String(item.id), label: `${item.carteira?.nome} / ${item.nome}` })),
+          templates: templates.map((item) => ({ value: String(item.id), label: item.nome }))
         };
       }}
       toFormValues={(item) => ({
@@ -81,10 +102,13 @@ export default function LancamentosPage() {
         ano: String(item.ano ?? ""),
         valor: String(item.valor),
         tipo: item.tipo,
+        status: item.status ?? "nao_pago",
+        data_pagamento: item.data_pagamento?.slice(0, 10) ?? "",
         pessoa_id: String(item.pessoa_id),
-        eh_casa: Boolean(item.eh_casa),
+        casa: Boolean(item.casa),
         categoria_id: String(item.categoria_id),
         subconta_id: String(item.subconta_id),
+        template_lancamento_id: item.template_lancamento_id == null ? "" : String(item.template_lancamento_id),
         descricao: item.descricao ?? ""
       })}
       buildPayload={(values) => ({
@@ -93,10 +117,13 @@ export default function LancamentosPage() {
         ano: Number(values.ano),
         valor: Number(values.valor),
         tipo: values.tipo,
+        status: values.status,
+        data_pagamento: values.data_pagamento?.trim() ? values.data_pagamento : null,
         pessoa_id: Number(values.pessoa_id),
-        eh_casa: Boolean(values.eh_casa),
+        casa: Boolean(values.casa),
         categoria_id: Number(values.categoria_id),
         subconta_id: Number(values.subconta_id),
+        template_lancamento_id: values.template_lancamento_id ? Number(values.template_lancamento_id) : null,
         descricao: values.descricao?.trim() ? values.descricao.trim() : null
       })}
     />

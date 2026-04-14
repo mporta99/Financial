@@ -9,7 +9,7 @@ export default function DataTable({ columns, rows, onEdit, onDelete, emptyMessag
             {columns.map((column) => (
               <th key={column.key}>{column.label}</th>
             ))}
-            <th>Ações</th>
+            <th className="actions-column">Acoes</th>
           </tr>
         </thead>
         <tbody>
@@ -23,11 +23,9 @@ export default function DataTable({ columns, rows, onEdit, onDelete, emptyMessag
             rows.map((row) => (
               <tr key={row.id}>
                 {columns.map((column) => (
-                  <td key={column.key}>
-                    {column.render ? column.render(row) : row[column.key]}
-                  </td>
+                  <td key={column.key}>{column.render ? column.render(row) : row[column.key]}</td>
                 ))}
-                <td>
+                <td className="actions-column">
                   <div className="table-actions">
                     <button type="button" className="button-secondary" onClick={() => onEdit(row)}>
                       Editar

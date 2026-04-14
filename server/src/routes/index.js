@@ -1,6 +1,7 @@
 const { handleCarteirasRoutes } = require("./carteiras.routes");
 const { handleCategoriasRoutes } = require("./categorias.routes");
 const { handleCategoriasSubcontasRoutes } = require("./categorias-subcontas.routes");
+const { handleGerarMesRoutes } = require("./gerar-mes.routes");
 const { handleItensTemplateRoutes } = require("./itens-template.routes");
 const { handleLancamentosRoutes } = require("./lancamentos.routes");
 const { handlePessoasRoutes } = require("./pessoas.routes");
@@ -34,6 +35,11 @@ async function router(req, res) {
 
   if (matchRoute(/^\/api\/categorias(?:\/(?<id>\d+))?$/)) {
     await handleCategoriasRoutes(req, res);
+    return;
+  }
+
+  if (url.pathname === "/api/gerar-mes") {
+    await handleGerarMesRoutes(req, res);
     return;
   }
 

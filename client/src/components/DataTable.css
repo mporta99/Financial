@@ -1,38 +1,65 @@
 .table-card {
   overflow: auto;
-  border-radius: 24px;
+  border-radius: 18px;
   background: var(--bg-surface);
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow-soft);
+  max-height: calc(100vh - 220px);
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: max-content;
 }
 
 .data-table th,
 .data-table td {
-  padding: 16px 14px;
+  padding: 9px 10px;
   text-align: left;
   border-bottom: 1px solid var(--border-soft);
   vertical-align: top;
+  font-size: 0.84rem;
 }
 
 .data-table th {
-  font-size: 0.78rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--bg-surface);
+  font-size: 0.66rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-muted);
 }
 
+.data-table .actions-column {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background: var(--bg-surface);
+  min-width: 132px;
+  box-shadow: -10px 0 14px rgba(255, 255, 255, 0.96);
+}
+
+.data-table tbody .actions-column {
+  z-index: 1;
+}
+
 .table-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .empty-cell {
   color: var(--text-muted);
   text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .table-card {
+    max-height: none;
+  }
 }

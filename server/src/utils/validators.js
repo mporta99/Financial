@@ -1,8 +1,11 @@
-const { HttpError } = require("./http-error");
+﻿const { HttpError } = require("./http-error");
 
 const TIPOS_SUBCONTA = ["livre", "restrita", "investimento"];
 const TIPOS_CATEGORIA = ["entrada", "saida"];
+const GRUPOS_CATEGORIA = ["Essenciais", "Conforto", "Investimentos", "Outros", "Cartao"];
 const TIPOS_LANCAMENTO = ["entrada", "saida"];
+const STATUS_LANCAMENTO = ["nao_pago", "pago"];
+const STATUS_TRANSFERENCIA = ["planejada", "realizada"];
 const FREQUENCIAS_TEMPLATE = ["mensal"];
 const TIPOS_GERACAO_TEMPLATE = ["fixo", "variavel_com_data", "acumulador", "embutido"];
 
@@ -68,6 +71,9 @@ function requireEnum(value, fieldName, allowedValues) {
 
 module.exports = {
   FREQUENCIAS_TEMPLATE,
+  GRUPOS_CATEGORIA,
+  STATUS_LANCAMENTO,
+  STATUS_TRANSFERENCIA,
   TIPOS_CATEGORIA,
   TIPOS_GERACAO_TEMPLATE,
   TIPOS_LANCAMENTO,

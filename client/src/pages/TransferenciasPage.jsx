@@ -8,6 +8,17 @@ const fields = [
   { name: "ano", label: "Ano", type: "number", required: true, placeholder: "2026" },
   { name: "valor", label: "Valor", type: "number", step: "0.01", required: true, placeholder: "0.00" },
   {
+    name: "status",
+    label: "Status",
+    type: "select",
+    required: true,
+    options: [
+      { value: "planejada", label: "Planejada" },
+      { value: "realizada", label: "Realizada" }
+    ]
+  },
+  { name: "data_realizacao", label: "Data realizacao", type: "date" },
+  {
     name: "subconta_origem_id",
     label: "Subconta de origem",
     type: "select",
@@ -27,6 +38,7 @@ const fields = [
 const columns = [
   { key: "data", label: "Data", render: (row) => formatDate(row.data) },
   { key: "competencia", label: "Mes/Ano", render: (row) => `${row.mes}/${row.ano}` },
+  { key: "status", label: "Status" },
   { key: "valor", label: "Valor", render: (row) => formatCurrency(row.valor) },
   {
     key: "origem",
@@ -45,7 +57,7 @@ export default function TransferenciasPage() {
   return (
     <EntityManager
       title="Transferencias"
-      description="Movimentacoes entre subcontas sem tratar como entrada ou saida."
+      description="Movimentacoes entre subcontas com status planejada ou realizada."
       endpoint="transferencias"
       fields={fields}
       columns={columns}
@@ -60,6 +72,8 @@ export default function TransferenciasPage() {
         mes: String(item.mes ?? ""),
         ano: String(item.ano ?? ""),
         valor: String(item.valor),
+        status: item.status ?? "planejada",
+        data_realizacao: item.data_realizacao?.slice(0, 10) ?? "",
         subconta_origem_id: String(item.subconta_origem_id),
         subconta_destino_id: String(item.subconta_destino_id),
         descricao: item.descricao ?? ""
@@ -69,6 +83,8 @@ export default function TransferenciasPage() {
         mes: Number(values.mes),
         ano: Number(values.ano),
         valor: Number(values.valor),
+        status: values.status,
+        data_realizacao: values.data_realizacao?.trim() ? values.data_realizacao : null,
         subconta_origem_id: Number(values.subconta_origem_id),
         subconta_destino_id: Number(values.subconta_destino_id),
         descricao: values.descricao?.trim() ? values.descricao.trim() : null

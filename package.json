@@ -5,9 +5,15 @@
   "description": "Financial app monorepo with React frontend and Node.js backend.",
   "scripts": {
     "dev": "node scripts/dev.js",
+    "dev:test": "node scripts/dev.js test",
     "client:dev": "npm --prefix client run dev",
     "client:build": "npm --prefix client run build",
     "server:dev": "npm --prefix server run dev",
-    "server:start": "npm --prefix server run start"
+    "server:start": "npm --prefix server run start",
+    "server:test": "npm --prefix server run start:test",
+    "server:test:dev": "npm --prefix server run dev:test",
+    "db:test:init": "npm --prefix server run db:test:init",
+    "db:test:seed": "npm --prefix server run prisma:seed:test",
+    "db:test:validate": "npm --prefix server run prisma:validate:test"
   }
 }
