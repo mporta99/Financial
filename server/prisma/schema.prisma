@@ -91,6 +91,7 @@ model Lancamento {
   data                  DateTime
   mes                   Int
   ano                   Int
+  ocorrencia_mes        Int?
   valor                 Decimal
   tipo                  String
   status                StatusLancamento    @default(nao_pago)
@@ -114,6 +115,7 @@ model Lancamento {
   @@index([subconta_id])
   @@index([template_lancamento_id])
   @@index([item_template_id])
+  @@index([template_lancamento_id, pessoa_id, ano, mes, ocorrencia_mes])
   @@index([ano, mes])
   @@map("lancamentos")
 }
@@ -160,6 +162,7 @@ model TemplateLancamento {
   frequencia      FrequenciaTemplate
   tipo_geracao    TipoGeracaoTemplate
   dia_fixo        Int?
+  quantidade_mensal Int                @default(1)
   tem_valor_fixo  Boolean
   valor_padrao    Decimal?
   gera_lancamento Boolean

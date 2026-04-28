@@ -8,6 +8,54 @@ function buildCompetenciaDate(ano, mes, dia) {
   return new Date(Date.UTC(ano, mes - 1, safeDay));
 }
 
+function buildOccurrenceDay(ano, mes, quantidadeMensal, ocorrenciaMes, diaFixo) {
+  if (quantidadeMensal <= 1) {
+    return diaFixo ?? 1;
+  }
+
+  const lastDay = new Date(Date.UTC(ano, mes, 0)).getUTCDate();
+  return Math.max(1, Math.min(Math.round((lastDay * ocorrenciaMes) / quantidadeMensal), lastDay));
+}
+
+function buildTemplateDescription(template, mes, ano, ocorrenciaMes, quantidadeMensal) {
+  const competencia = `${String(mes).padStart(2, "0")}/${ano}`;
+
+  if (quantidadeMensal <= 1) {
+    return `${template.nome} ${competencia}`;
+  }
+
+  return `${template.nome} ${ocorrenciaMes}/${quantidadeMensal} ${competencia}`;
+}
+
+function buildEmbeddedDescription(itemTemplate, template, mes, ano, ocorrenciaMes, quantidadeMensal) {
+  const competencia = `${String(mes).padStart(2, "0")}/${ano}`;
+
+  if (quantidadeMensal <= 1) {
+    return `${itemTemplate.categoria.nome} em ${template.nome} ${competencia}`;
+  }
+
+  return `${itemTemplate.categoria.nome} em ${template.nome} ${ocorrenciaMes}/${quantidadeMensal} ${competencia}`;
+}
+
+async function findDuplicateLancamento({ templateId, itemTemplateId = null, pessoaId, ano, mes, ocorrenciaMes }) {
+  return prisma.lancamento.findFirst({
+    where: {
+      template_lancamento_id: templateId,
+      item_template_id: itemTemplateId,
+      pessoa_id: pessoaId,
+      ano,
+      mes,
+      ...(ocorrenciaMes === 1
+        ? {
+            OR: [{ ocorrencia_mes: 1 }, { ocorrencia_mes: null }]
+          }
+        : {
+            ocorrencia_mes: ocorrenciaMes
+          })
+    }
+  });
+}
+
 async function gerarMes(payload) {
   const ano = requireInteger(payload.ano, "ano");
   const mes = requireInteger(payload.mes, "mes");
@@ -51,24 +99,6 @@ async function gerarMes(payload) {
   const skipped = [];
 
   for (const template of templates) {
-    const duplicate = await prisma.lancamento.findFirst({
-      where: {
-        template_lancamento_id: template.id,
-        pessoa_id: pessoaId,
-        ano,
-        mes
-      }
-    });
-
-    if (duplicate) {
-      skipped.push({
-        template_id: template.id,
-        nome: template.nome,
-        motivo: "ja_existente"
-      });
-      continue;
-    }
-
     if (!template.categoria?.subconta_id) {
       skipped.push({
         template_id: template.id,
@@ -78,82 +108,43 @@ async function gerarMes(payload) {
       continue;
     }
 
-    const item = await prisma.lancamento.create({
-      data: {
-        data: buildCompetenciaDate(ano, mes, template.dia_fixo ?? 1),
-        mes,
+    const quantidadeMensal = Math.max(1, Number(template.quantidade_mensal ?? 1));
+
+    for (let ocorrenciaMes = 1; ocorrenciaMes <= quantidadeMensal; ocorrenciaMes += 1) {
+      const duplicate = await findDuplicateLancamento({
+        templateId: template.id,
+        pessoaId,
         ano,
-        valor: Number(template.valor_padrao ?? 0),
-        tipo: template.categoria.tipo,
-        status: "nao_pago",
-        data_pagamento: null,
-        contabiliza_saldo: true,
-        pessoa_id: pessoaId,
-        casa: template.categoria.casa,
-        categoria_id: template.categoria_id,
-        subconta_id: template.categoria.subconta_id,
-        template_lancamento_id: template.id,
-        descricao: `${template.nome} ${String(mes).padStart(2, "0")}/${ano}`
-      },
-      include: {
-        pessoa: true,
-        categoria: true,
-        template_lancamento: true,
-        subconta: {
-          include: {
-            carteira: true
-          }
-        }
-      }
-    });
-
-    generated.push(item);
-
-    for (const itemTemplate of template.itens_template) {
-      const duplicateEmbedded = await prisma.lancamento.findFirst({
-        where: {
-          item_template_id: itemTemplate.id,
-          pessoa_id: pessoaId,
-          ano,
-          mes
-        }
+        mes,
+        ocorrenciaMes
       });
 
-      if (duplicateEmbedded) {
+      if (duplicate) {
         skipped.push({
           template_id: template.id,
-          nome: `${template.nome} :: ${itemTemplate.categoria?.nome ?? itemTemplate.id}`,
-          motivo: "item_embutido_ja_existente"
+          nome: buildTemplateDescription(template, mes, ano, ocorrenciaMes, quantidadeMensal),
+          motivo: "ja_existente"
         });
         continue;
       }
 
-      if (!itemTemplate.categoria?.subconta_id) {
-        skipped.push({
-          template_id: template.id,
-          nome: `${template.nome} :: ${itemTemplate.categoria?.nome ?? itemTemplate.id}`,
-          motivo: "item_embutido_sem_subconta_padrao"
-        });
-        continue;
-      }
-
-      const embeddedItem = await prisma.lancamento.create({
+      const item = await prisma.lancamento.create({
         data: {
-          data: buildCompetenciaDate(ano, mes, itemTemplate.dia_fixo ?? template.dia_fixo ?? 1),
+          data: buildCompetenciaDate(ano, mes, buildOccurrenceDay(ano, mes, quantidadeMensal, ocorrenciaMes, template.dia_fixo)),
           mes,
           ano,
-          valor: Number(itemTemplate.valor_padrao ?? 0),
-          tipo: itemTemplate.categoria.tipo,
+          ocorrencia_mes: ocorrenciaMes,
+          valor: Number(template.valor_padrao ?? 0),
+          tipo: template.categoria.tipo,
           status: "nao_pago",
           data_pagamento: null,
-          contabiliza_saldo: false,
+          contabiliza_saldo: true,
           pessoa_id: pessoaId,
-          casa: itemTemplate.categoria.casa,
-          categoria_id: itemTemplate.categoria_id,
-          subconta_id: itemTemplate.categoria.subconta_id,
+          casa: template.categoria.casa,
+          categoria_id: template.categoria_id,
+          subconta_id: template.categoria.subconta_id,
           template_lancamento_id: template.id,
-          item_template_id: itemTemplate.id,
-          descricao: `${itemTemplate.categoria.nome} em ${template.nome} ${String(mes).padStart(2, "0")}/${ano}`
+          descricao: buildTemplateDescription(template, mes, ano, ocorrenciaMes, quantidadeMensal)
         },
         include: {
           pessoa: true,
@@ -167,7 +158,73 @@ async function gerarMes(payload) {
         }
       });
 
-      generated.push(embeddedItem);
+      generated.push(item);
+
+      for (const itemTemplate of template.itens_template) {
+        const duplicateEmbedded = await findDuplicateLancamento({
+          templateId: template.id,
+          itemTemplateId: itemTemplate.id,
+          pessoaId,
+          ano,
+          mes,
+          ocorrenciaMes
+        });
+
+        if (duplicateEmbedded) {
+          skipped.push({
+            template_id: template.id,
+            nome: buildEmbeddedDescription(itemTemplate, template, mes, ano, ocorrenciaMes, quantidadeMensal),
+            motivo: "item_embutido_ja_existente"
+          });
+          continue;
+        }
+
+        if (!itemTemplate.categoria?.subconta_id) {
+          skipped.push({
+            template_id: template.id,
+            nome: buildEmbeddedDescription(itemTemplate, template, mes, ano, ocorrenciaMes, quantidadeMensal),
+            motivo: "item_embutido_sem_subconta_padrao"
+          });
+          continue;
+        }
+
+        const embeddedItem = await prisma.lancamento.create({
+          data: {
+            data: buildCompetenciaDate(
+              ano,
+              mes,
+              buildOccurrenceDay(ano, mes, quantidadeMensal, ocorrenciaMes, itemTemplate.dia_fixo ?? template.dia_fixo)
+            ),
+            mes,
+            ano,
+            ocorrencia_mes: ocorrenciaMes,
+            valor: Number(itemTemplate.valor_padrao ?? 0),
+            tipo: itemTemplate.categoria.tipo,
+            status: "nao_pago",
+            data_pagamento: null,
+            contabiliza_saldo: false,
+            pessoa_id: pessoaId,
+            casa: itemTemplate.categoria.casa,
+            categoria_id: itemTemplate.categoria_id,
+            subconta_id: itemTemplate.categoria.subconta_id,
+            template_lancamento_id: template.id,
+            item_template_id: itemTemplate.id,
+            descricao: buildEmbeddedDescription(itemTemplate, template, mes, ano, ocorrenciaMes, quantidadeMensal)
+          },
+          include: {
+            pessoa: true,
+            categoria: true,
+            template_lancamento: true,
+            subconta: {
+              include: {
+                carteira: true
+              }
+            }
+          }
+        });
+
+        generated.push(embeddedItem);
+      }
     }
   }
 

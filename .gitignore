@@ -2,8 +2,10 @@ node_modules/
 dist/
 build/
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+!.env.prod.example
+!.env.*.local
 server/prisma/*.db
 server/prisma/*.db-journal
 coverage/

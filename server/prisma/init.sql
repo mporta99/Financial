@@ -37,6 +37,7 @@ CREATE TABLE "lancamentos" (
     "data" DATETIME NOT NULL,
     "mes" INTEGER NOT NULL,
     "ano" INTEGER NOT NULL,
+    "ocorrencia_mes" INTEGER,
     "valor" DECIMAL NOT NULL,
     "tipo" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'nao_pago',
@@ -88,6 +89,7 @@ CREATE TABLE "templates_lancamento" (
     "frequencia" TEXT NOT NULL,
     "tipo_geracao" TEXT NOT NULL,
     "dia_fixo" INTEGER,
+    "quantidade_mensal" INTEGER NOT NULL DEFAULT 1,
     "tem_valor_fixo" BOOLEAN NOT NULL,
     "valor_padrao" DECIMAL,
     "gera_lancamento" BOOLEAN NOT NULL,
@@ -116,6 +118,7 @@ CREATE INDEX "lancamentos_categoria_id_idx" ON "lancamentos"("categoria_id");
 CREATE INDEX "lancamentos_subconta_id_idx" ON "lancamentos"("subconta_id");
 CREATE INDEX "lancamentos_template_lancamento_id_idx" ON "lancamentos"("template_lancamento_id");
 CREATE INDEX "lancamentos_item_template_id_idx" ON "lancamentos"("item_template_id");
+CREATE INDEX "lancamentos_template_lancamento_id_pessoa_id_ano_mes_ocorrencia_mes_idx" ON "lancamentos"("template_lancamento_id", "pessoa_id", "ano", "mes", "ocorrencia_mes");
 CREATE INDEX "lancamentos_ano_mes_idx" ON "lancamentos"("ano", "mes");
 CREATE INDEX "transferencias_subconta_origem_id_idx" ON "transferencias"("subconta_origem_id");
 CREATE INDEX "transferencias_subconta_destino_id_idx" ON "transferencias"("subconta_destino_id");

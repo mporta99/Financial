@@ -246,6 +246,7 @@ async function main() {
       frequencia: "mensal",
       tipo_geracao: "fixo",
       dia_fixo: 5,
+      quantidade_mensal: 1,
       tem_valor_fixo: true,
       valor_padrao: 1850,
       gera_lancamento: true
@@ -261,6 +262,7 @@ async function main() {
       frequencia: "mensal",
       tipo_geracao: "variavel_com_data",
       dia_fixo: 10,
+      quantidade_mensal: 1,
       tem_valor_fixo: false,
       valor_padrao: null,
       gera_lancamento: true
@@ -276,6 +278,7 @@ async function main() {
       frequencia: "mensal",
       tipo_geracao: "acumulador",
       dia_fixo: null,
+      quantidade_mensal: 4,
       tem_valor_fixo: false,
       valor_padrao: null,
       gera_lancamento: true
@@ -291,6 +294,7 @@ async function main() {
       frequencia: "mensal",
       tipo_geracao: "acumulador",
       dia_fixo: null,
+      quantidade_mensal: 1,
       tem_valor_fixo: false,
       valor_padrao: null,
       gera_lancamento: true
@@ -306,6 +310,7 @@ async function main() {
       frequencia: "mensal",
       tipo_geracao: "acumulador",
       dia_fixo: null,
+      quantidade_mensal: 1,
       tem_valor_fixo: false,
       valor_padrao: null,
       gera_lancamento: true
@@ -321,6 +326,7 @@ async function main() {
       frequencia: "mensal",
       tipo_geracao: "embutido",
       dia_fixo: null,
+      quantidade_mensal: 1,
       tem_valor_fixo: true,
       valor_padrao: 119.9,
       gera_lancamento: false
@@ -336,6 +342,7 @@ async function main() {
       frequencia: "mensal",
       tipo_geracao: "embutido",
       dia_fixo: null,
+      quantidade_mensal: 1,
       tem_valor_fixo: true,
       valor_padrao: 39.9,
       gera_lancamento: false
@@ -389,6 +396,7 @@ async function main() {
         data: new Date("2026-03-05"),
         mes: 3,
         ano: 2026,
+        ocorrencia_mes: 1,
         template_lancamento_id: templateAluguel.id,
         valor: 1850,
         tipo: "saida",
@@ -404,6 +412,7 @@ async function main() {
         data: new Date("2026-03-08"),
         mes: 3,
         ano: 2026,
+        ocorrencia_mes: 1,
         template_lancamento_id: templateMercado.id,
         valor: 420.5,
         tipo: "saida",
@@ -419,6 +428,7 @@ async function main() {
         data: new Date("2026-03-10"),
         mes: 3,
         ano: 2026,
+        ocorrencia_mes: 1,
         template_lancamento_id: templateFatura.id,
         valor: 359.8,
         tipo: "saida",
@@ -434,6 +444,7 @@ async function main() {
         data: new Date("2026-03-08"),
         mes: 3,
         ano: 2026,
+        ocorrencia_mes: 1,
         template_lancamento_id: templateIfood.id,
         valor: 68.9,
         tipo: "saida",

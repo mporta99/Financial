@@ -6,16 +6,18 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
+    "start:prod": "node scripts/run-with-env.js .env.prod node src/index.js",
     "prisma:generate": "prisma generate",
+    "prisma:validate": "prisma validate",
+    "prisma:generate:prod": "node scripts/run-with-env.js .env.prod prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",
     "prisma:seed": "tsx prisma/seed.ts",
-    "dev:test": "node scripts/run-with-env.js .env.test node --watch src/index.js",
-    "start:test": "node scripts/run-with-env.js .env.test node src/index.js",
-    "prisma:generate:test": "node scripts/run-with-env.js .env.test prisma generate",
-    "prisma:validate:test": "node scripts/run-with-env.js .env.test prisma validate",
-    "db:test:init": "node scripts/run-with-env.js .env.test npx prisma db execute --file prisma/init.sql --schema prisma/schema.prisma",
-    "prisma:seed:test": "node scripts/run-with-env.js .env.test tsx prisma/seed.ts"
+    "prisma:validate:prod": "node scripts/run-with-env.js .env.prod prisma validate",
+    "db:backup": "node scripts/backup-db.js .env manual",
+    "db:backup:dev": "node scripts/backup-db.js .env dev",
+    "db:backup:prod": "node scripts/backup-db.js .env.prod prod",
+    "db:exec:prod": "node scripts/run-with-env.js .env.prod npx prisma db execute --schema prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",

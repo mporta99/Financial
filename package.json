@@ -5,15 +5,19 @@
   "description": "Financial app monorepo with React frontend and Node.js backend.",
   "scripts": {
     "dev": "node scripts/dev.js",
-    "dev:test": "node scripts/dev.js test",
+    "qas": "node scripts/dev.js",
+    "prod": "node scripts/prod.js",
     "client:dev": "npm --prefix client run dev",
     "client:build": "npm --prefix client run build",
+    "client:preview": "npm --prefix client run preview -- --host 0.0.0.0 --port 4173",
     "server:dev": "npm --prefix server run dev",
+    "server:qas": "npm --prefix server run start",
     "server:start": "npm --prefix server run start",
-    "server:test": "npm --prefix server run start:test",
-    "server:test:dev": "npm --prefix server run dev:test",
-    "db:test:init": "npm --prefix server run db:test:init",
-    "db:test:seed": "npm --prefix server run prisma:seed:test",
-    "db:test:validate": "npm --prefix server run prisma:validate:test"
+    "server:start:prod": "npm --prefix server run start:prod",
+    "db:backup:dev": "npm --prefix server run db:backup:dev",
+    "db:backup:qas": "npm --prefix server run db:backup:dev",
+    "db:backup:prod": "npm --prefix server run db:backup:prod",
+    "db:dev:seed": "npm --prefix server run prisma:seed",
+    "db:dev:validate": "npm --prefix server run prisma:validate"
   }
 }

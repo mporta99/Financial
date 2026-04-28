@@ -8,6 +8,7 @@ const {
   requireIdParam,
   requireInteger,
   requireNumber,
+  requirePositiveInteger,
   requireString
 } = require("../utils/validators");
 
@@ -75,6 +76,7 @@ async function createTemplateLancamento(payload) {
       frequencia: requireEnum(payload.frequencia, "frequencia", FREQUENCIAS_TEMPLATE),
       tipo_geracao: requireEnum(payload.tipo_geracao, "tipo_geracao", TIPOS_GERACAO_TEMPLATE),
       dia_fixo: optionalInteger(payload.dia_fixo, "dia_fixo"),
+      quantidade_mensal: payload.quantidade_mensal == null ? 1 : requirePositiveInteger(payload.quantidade_mensal, "quantidade_mensal"),
       tem_valor_fixo: requireBoolean(payload.tem_valor_fixo, "tem_valor_fixo"),
       valor_padrao: optionalNumber(payload.valor_padrao, "valor_padrao"),
       gera_lancamento: requireBoolean(payload.gera_lancamento, "gera_lancamento")
@@ -107,6 +109,7 @@ async function updateTemplateLancamento(id, payload) {
       frequencia: requireEnum(payload.frequencia, "frequencia", FREQUENCIAS_TEMPLATE),
       tipo_geracao: requireEnum(payload.tipo_geracao, "tipo_geracao", TIPOS_GERACAO_TEMPLATE),
       dia_fixo: optionalInteger(payload.dia_fixo, "dia_fixo"),
+      quantidade_mensal: payload.quantidade_mensal == null ? 1 : requirePositiveInteger(payload.quantidade_mensal, "quantidade_mensal"),
       tem_valor_fixo: requireBoolean(payload.tem_valor_fixo, "tem_valor_fixo"),
       valor_padrao: optionalNumber(payload.valor_padrao, "valor_padrao"),
       gera_lancamento: requireBoolean(payload.gera_lancamento, "gera_lancamento")

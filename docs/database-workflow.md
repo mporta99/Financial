@@ -3,38 +3,37 @@
 ## Recommended setup
 
 - `server/.env`
-  - your active app database
-- `server/.env.test`
-  - isolated test database used for validation and seed runs
+  - development and QAS database used by the app in normal mode
+- `server/.env.prod`
+  - production database used only by explicit production scripts
 
 ## Suggested URLs
 
-- real/app data: `DATABASE_URL="file:./prod.db"`
-- test data: `DATABASE_URL="file:./test.db"`
+- active app data: `DATABASE_URL="file:./test.db"`
+- production data: `DATABASE_URL="file:./prod.db"`
 
-## Safe test commands
+## Safe non-production commands
 
-Run all validations against the isolated test database:
+Run all day-to-day development and QAS commands against the non-production database:
 
 ```bash
-npm --prefix server run prisma:generate:test
-npm --prefix server run db:test:init
-npm --prefix server run prisma:seed:test
-npm --prefix server run start:test
+npm --prefix server run prisma:generate
+npm --prefix server run prisma:push
+npm --prefix server run prisma:seed
+npm --prefix server run start
 ```
 
 You can also use the root shortcuts:
 
 ```bash
-npm run db:test:validate
-npm run db:test:init
-npm run db:test:seed
-npm run server:test
-npm run dev:test
+npm run db:dev:validate
+npm run db:dev:seed
+npm run server:qas
+npm run dev
 ```
 
 ## Important
 
 - do not run `seed` against the database from `server/.env` after you start filling real data
-- prefer `*.test` scripts for development validation
-- keep `server/.env` pointing to the database you actually want the app to use
+- keep `server/.env` for development and QAS only
+- keep `server/.env.prod` out of git and use it only for explicit production commands

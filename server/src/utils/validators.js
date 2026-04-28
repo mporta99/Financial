@@ -33,6 +33,16 @@ function requireInteger(value, fieldName) {
   return value;
 }
 
+function requirePositiveInteger(value, fieldName) {
+  const parsed = requireInteger(value, fieldName);
+
+  if (parsed <= 0) {
+    throw new HttpError(400, `Field '${fieldName}' must be greater than zero`);
+  }
+
+  return parsed;
+}
+
 function requireIdParam(value, fieldName = "id") {
   const parsed = Number.parseInt(value, 10);
 
@@ -84,5 +94,6 @@ module.exports = {
   requireIdParam,
   requireInteger,
   requireNumber,
+  requirePositiveInteger,
   requireString
 };

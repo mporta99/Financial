@@ -38,6 +38,7 @@ const fields = [
     ]
   },
   { name: "dia_fixo", label: "Dia fixo", type: "number", placeholder: "10" },
+  { name: "quantidade_mensal", label: "Quantidade no mes", type: "number", required: true, min: 1, placeholder: "1" },
   { name: "tem_valor_fixo", label: "Tem valor fixo", type: "checkbox" },
   { name: "valor_padrao", label: "Valor padrao", type: "number", step: "0.01", placeholder: "0.00" },
   { name: "gera_lancamento", label: "Gera lancamento", type: "checkbox" }
@@ -50,6 +51,7 @@ const columns = [
   { key: "frequencia", label: "Frequencia" },
   { key: "tipo_geracao", label: "Tipo geracao" },
   { key: "dia_fixo", label: "Dia fixo", render: (row) => row.dia_fixo ?? "-" },
+  { key: "quantidade_mensal", label: "Qtd mes", render: (row) => row.quantidade_mensal ?? 1 },
   { key: "tem_valor_fixo", label: "Valor fixo", render: (row) => (row.tem_valor_fixo ? "Sim" : "Nao") },
   { key: "valor_padrao", label: "Valor padrao", render: (row) => (row.valor_padrao == null ? "-" : formatCurrency(row.valor_padrao)) },
   { key: "gera_lancamento", label: "Gera lancamento", render: (row) => (row.gera_lancamento ? "Sim" : "Nao") },
@@ -79,6 +81,7 @@ export default function TemplatesLancamentoPage() {
         frequencia: item.frequencia,
         tipo_geracao: item.tipo_geracao,
         dia_fixo: item.dia_fixo == null ? "" : String(item.dia_fixo),
+        quantidade_mensal: String(item.quantidade_mensal ?? 1),
         tem_valor_fixo: item.tem_valor_fixo,
         valor_padrao: item.valor_padrao == null ? "" : String(item.valor_padrao),
         gera_lancamento: item.gera_lancamento
@@ -91,6 +94,7 @@ export default function TemplatesLancamentoPage() {
         frequencia: values.frequencia,
         tipo_geracao: values.tipo_geracao,
         dia_fixo: values.dia_fixo === "" ? null : Number(values.dia_fixo),
+        quantidade_mensal: values.quantidade_mensal === "" ? 1 : Number(values.quantidade_mensal),
         tem_valor_fixo: Boolean(values.tem_valor_fixo),
         valor_padrao: values.valor_padrao === "" ? null : Number(values.valor_padrao),
         gera_lancamento: Boolean(values.gera_lancamento)

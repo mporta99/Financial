@@ -1,7 +1,29 @@
-const { spawn } = require("child_process");
+const { spawn, spawnSync } = require("child_process");
 
 const isWindows = process.platform === "win32";
 const children = [];
+let shuttingDown = false;
+
+function runStep(name, command) {
+  const result = spawnSync(command, {
+    cwd: process.cwd(),
+    env: {
+      ...process.env,
+      VITE_API_BASE_URL: "http://localhost:4000/api"
+    },
+    shell: isWindows,
+    stdio: "inherit"
+  });
+
+  if (result.status !== 0) {
+    process.exit(result.status ?? 1);
+  }
+
+  if (result.error) {
+    console.error(`[${name}] ${result.error.message}`);
+    process.exit(1);
+  }
+}
 
 function startProcess(name, command, color) {
   const child = spawn(command, {
@@ -33,10 +55,7 @@ function startProcess(name, command, color) {
   });
 
   children.push(child);
-  return child;
 }
-
-let shuttingDown = false;
 
 function shutdown(exitCode) {
   if (shuttingDown) {
@@ -57,6 +76,7 @@ function shutdown(exitCode) {
         child.kill("SIGTERM");
       }
     }
+
     process.exit(exitCode);
   }, 500);
 }
@@ -64,5 +84,6 @@ function shutdown(exitCode) {
 process.on("SIGINT", () => shutdown(0));
 process.on("SIGTERM", () => shutdown(0));
 
-startProcess("server", "npm run server:dev", "36");
-startProcess("client", "npm run client:dev", "35");
+runStep("client-build", "npm run client:build");
+startProcess("server", "npm run server:start:prod", "36");
+startProcess("client", "npm run client:preview", "35");
